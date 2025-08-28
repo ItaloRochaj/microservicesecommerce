@@ -5,7 +5,7 @@
 [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.13-FF6600?style=flat&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
 [![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-Sistema completo de e-commerce usando **arquitetura de microserviços** com .NET 8, implementando comunicação assíncrona via RabbitMQ, autenticação JWT e persistência em MySQL.
+**Arquitetura de Microserviços** com .NET 8, implementando comunicação assíncrona via RabbitMQ, autenticação JWT e persistência em MySQL.
 
 ---
 
@@ -620,62 +620,51 @@ public async Task CreateOrder_ValidRequest_ReturnsCreatedOrder()
 
 ```
 microservicesecommerce/
-├── 📁 src/                              # Código fonte
-│   ├── 🌐 ApiGateway/                   # API Gateway
-│   │   ├── Controllers/                 # AuthController
-│   │   ├── Data/                       # DbContext para autenticação
-│   │   ├── Services/                   # AuthService, IAuthService
-│   │   ├── Properties/                 # launchSettings.json
-│   │   ├── appsettings.json           # Configurações (JWT, DB, YARP)
-│   │   └── Program.cs                 # Configuração da aplicação
-│   │
-│   ├── 📦 StockService/                # Serviço de Estoque
-│   │   ├── Controllers/               # ProductsController
-│   │   ├── Data/                     # StockDbContext
-│   │   ├── Services/                 # ProductService, RabbitMQService
-│   │   ├── Consumers/                # OrderCreatedConsumer
-│   │   ├── Migrations/               # Migrações EF Core
-│   │   ├── logs/                     # Arquivos de log
-│   │   ├── appsettings.json         # Configurações (DB, RabbitMQ)
-│   │   └── Program.cs               # Configuração + Background Services
-│   │
-│   ├── 🛒 SalesService/               # Serviço de Vendas
-│   │   ├── Controllers/              # OrdersController
-│   │   ├── Data/                    # SalesDbContext
-│   │   ├── Services/                # OrderService, RabbitMQPublisher
-│   │   ├── Migrations/              # Migrações EF Core
-│   │   ├── logs/                    # Arquivos de log
-│   │   ├── appsettings.json        # Configurações (DB, RabbitMQ)
-│   │   └── Program.cs              # Configuração da aplicação
-│   │
-│   └── 📚 Shared/                     # Biblioteca compartilhada
-│       ├── Models/                   # User, Product, Order, OrderItem
-│       ├── DTOs/                    # Data Transfer Objects
-│       └── Enums/                   # OrderStatus
 │
-├── 📁 tests/                           # Projetos de teste
-│   ├── 🧪 StockService.Tests/         # Testes do StockService
-│   │   ├── Controllers/              # Testes dos controllers
-│   │   ├── Services/                # Testes dos services
-│   │   └── Integration/             # Testes de integração
+├── src/
+│   ├── ApiGateway/
+│   │   ├── Controllers/         # AuthController, etc.
+│   │   ├── Data/                # DbContext para autenticação
+│   │   ├── Services/            # AuthService, interfaces
+│   │   ├── Properties/          # launchSettings.json
+│   │   ├── appsettings.json     # Configurações (JWT, DB, YARP)
+│   │   └── Program.cs           # Configuração da aplicação
 │   │
-│   └── 🧪 SalesService.Tests/         # Testes do SalesService
-│       ├── Controllers/             # Testes dos controllers
-│       ├── Services/               # Testes dos services
-│       └── Integration/            # Testes de integração
+│   ├── StockService/
+│   │   ├── Controllers/         # ProductsController
+│   │   ├── Data/                # StockDbContext
+│   │   ├── Services/            # ProductService, RabbitMQ consumers
+│   │   ├── logs/                # Arquivos de log
+│   │   ├── appsettings.json     # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs           # Configuração do serviço
+│   │
+│   ├── SalesService/
+│   │   ├── Controllers/         # OrdersController
+│   │   ├── Data/                # SalesDbContext
+│   │   ├── Services/            # OrderService, RabbitMQ publisher
+│   │   ├── logs/                # Arquivos de log
+│   │   ├── appsettings.json     # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs           # Configuração do serviço
+│   │
+│   └── Shared/
+│       ├── Models/              # Product, Order, User, etc.
+│       ├── Events/              # Contratos de eventos RabbitMQ
+│       ├── Services/            # RabbitMQService, interfaces
+│       └── Shared.csproj        # Projeto da biblioteca compartilhada
 │
-├── 📁 scripts/                        # Scripts de automação
-│   ├── setup-mysql.ps1              # Configuração do MySQL
-│   ├── start-services-mysql.ps1     # Inicia todos os serviços
-│   ├── run-tests.ps1                # Executa todos os testes
-│   └── test-databases.ps1           # Testa conexões com DBs
+├── tests/
+│   ├── StockService.Tests/
+│   │   ├── ProductServiceTests.cs
+│   │   └── StockService.Tests.csproj
+│   │
+│   └── SalesService.Tests/
+│       ├── OrderServiceTests.cs
+│       └── SalesService.Tests.csproj
 │
-├── 📄 docker-compose.yml             # MySQL + RabbitMQ
-├── 📄 MicroservicesEcommerce.sln     # Solution do Visual Studio
-├── 📄 global.json                    # Versão do .NET SDK
-├── 📄 start-system.bat               # Script inicialização Windows
-├── 📄 start-system.ps1               # Script inicialização PowerShell
-└── 📄 RabbitMQ-Consumer-Test.ps1     # Teste consumo RabbitMQ
+├── docker-compose.yml           # Infraestrutura MySQL e RabbitMQ
+├── MicroservicesEcommerce.sln   # Solução Visual Studio
+├── global.json                  # Versão do .NET SDK
+├── README.md                    # Documentação principal
 ```
 
 ### 🎯 Arquivos de Configuração Principais
@@ -718,77 +707,6 @@ microservicesecommerce/
   }
 }
 ```
-
----
-
-## 📚 Documentação Adicional
-
-### 📖 Arquivos de Documentação
-
-| Arquivo | Descrição |
-|---------|-----------|
-| `API_DOCUMENTATION.md` | Documentação completa das APIs |
-| `API_EXAMPLES.md` | Exemplos de uso das APIs |
-| `ENDPOINTS_GUIDE.md` | Guia detalhado dos endpoints |
-| `POSTMAN_GUIDE.md` | Como usar as collections Postman |
-| `POSTMAN_QUICK_START.md` | Início rápido com Postman |
-| `RABBITMQ_TEST_RESULTS.md` | Resultados dos testes RabbitMQ |
-| `SETUP.md` | Guia de instalação e configuração |
-
-### 🔧 Scripts Disponíveis
-
-| Script | Descrição |
-|--------|-----------|
-| `start-system.bat` | Inicialização completa (Windows) |
-| `start-system.ps1` | Inicialização completa (PowerShell) |
-| `scripts/setup-mysql.ps1` | Configuração inicial MySQL |
-| `scripts/start-services-mysql.ps1` | Inicia serviços com MySQL |
-| `scripts/run-tests.ps1` | Executa todos os testes |
-| `scripts/test-databases.ps1` | Testa conexões com bancos |
-| `RabbitMQ-Consumer-Test.ps1` | Teste consumo mensagens |
-
----
-
-## 🔗 Collections Postman
-
-### 📋 Collections Disponíveis
-
-1. **`Microservices-Ecommerce-COMPLETA.postman_collection.json`**
-   - Collection principal com todos os endpoints
-   - Testes automatizados incluídos
-   - Variáveis de ambiente configuradas
-
-2. **`Microservices-Ecommerce.postman_collection.json`**
-   - Versão simplificada para desenvolvimento
-
-3. **`Postman_Collection.json`**
-   - Collection básica para testes rápidos
-
-### 🌍 Environments
-
-- **`Microservices-Ecommerce-COMPLETO.postman_environment.json`**
-- **`Microservices-Ecommerce.postman_environment.json`**
-
-### 🔧 Configuração no Postman
-
-1. **Importe a collection**:
-   - File → Import → `Microservices-Ecommerce-COMPLETA.postman_collection.json`
-
-2. **Importe o environment**:
-   - File → Import → `Microservices-Ecommerce-COMPLETO.postman_environment.json`
-
-3. **Configure as variáveis**:
-   ```json
-   {
-     "baseUrl": "http://localhost:5000",
-     "stockUrl": "http://localhost:5001", 
-     "salesUrl": "http://localhost:5002",
-     "token": "{{authToken}}"
-   }
-   ```
-
-4. **Execute os testes**:
-   - Collection → Run → Selecione environment → Run
 
 ---
 
@@ -945,48 +863,19 @@ dotnet ef database update
 # Tail dos logs em tempo real
 Get-Content "src/StockService/logs/stock-service-*.log" -Wait
 ```
-
 ---
 
-## 🤝 Contribuição
-
-### 📋 Como Contribuir
-
-1. **Fork** o repositório
-2. **Crie** uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. **Commit** suas mudanças (`git commit -am 'Add nova feature'`)
-4. **Push** para a branch (`git push origin feature/nova-feature`)
-5. **Abra** um Pull Request
-
-### 📝 Padrões de Código
-
-- ✅ Use **PascalCase** para classes e métodos
-- ✅ Use **camelCase** para variáveis locais
-- ✅ Adicione **XML comments** em métodos públicos
-- ✅ Escreva **testes unitários** para nova funcionalidade
-- ✅ Siga as **convenções .NET**
-
----
-
-## 📄 Licença
-
-Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
----
-
-## 👥 Autores
-
-- **Developer** - *Desenvolvimento inicial* - [GitHub](https://github.com/username)
-
----
-
-## 🙏 Agradecimentos
-
-- **Microsoft** - .NET 8 e Entity Framework Core
-- **Pivotal Software** - RabbitMQ
-- **Oracle** - MySQL
-- **Community** - Bibliotecas open source utilizadas
-
----
+### 👨🏻‍💻 Autor:
+<table style="border=0">
+  <tr>
+    <td align="left">
+      <a href="https://github.com/ItaloRochaj">
+        <span><b>Italo Rocha</b></span>
+      </a>
+      <br>
+      <span>Full-Stack Development</span>
+    </td>
+  </tr>
+</table>
 
 **🎯 Sistema completo e funcional pronto para produção! 🚀**
