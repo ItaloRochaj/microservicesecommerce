@@ -20,8 +20,6 @@
 - [🐰 RabbitMQ](#-rabbitmq)
 - [🧪 Testes](#-testes)
 - [📁 Estrutura do Projeto](#-estrutura-do-projeto)
-- [📚 Documentação Adicional](#-documentação-adicional)
-- [🔗 Collections Postman](#-collections-postman)
 
 ---
 
