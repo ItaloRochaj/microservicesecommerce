@@ -876,4 +876,4 @@ Get-Content "src/StockService/logs/stock-service-*.log" -Wait
   </tr>
 </table>
 
-**🎯 Sistema completo e funcional pronto para produção! 🚀**
+**🎯 Desenvolvimento partil do desafio técnico sobre o case da Avanade - Back-end com .NET e IA  🚀**
