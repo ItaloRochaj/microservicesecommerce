@@ -404,7 +404,7 @@ Cria um novo pedido.
 {
   "customerId": 6,
   "customerName": "Italo Rocha ",
-  "customerEmail": "italo@icloud.com",
+  "customerEmail": "italorochaj@icloud.com",
   "items": [
     {
       "productId": 1,
@@ -423,7 +423,7 @@ Cria um novo pedido.
 {
   "id": 10,
   "customerId": 6,
-  "customerName": "Italo Regis",
+  "customerName": "Italo Rocha",
   "customerEmail": "italorochaj@icloud.com",
   "totalAmount": 13499.97,
   "status": 0,
