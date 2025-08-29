@@ -38,7 +38,7 @@ O **Microservices Health Dashboard** é um sistema avançado de monitoramento em
 ✅ **Métricas Abrangentes** - Sistema, infraestrutura e microserviços  
 ✅ **Zero Configuração** - Funciona out-of-the-box após instalação  
 
-### 🎪 **Acesso Rápido**
+### 🛰️ **Acesso Rápido**
 
 ```bash
 # Dashboard Visual
@@ -1349,5 +1349,6 @@ O sistema está pronto para uso em produção, com todas as features essenciais 
   </tr>
 
 </table>
+
 
 
