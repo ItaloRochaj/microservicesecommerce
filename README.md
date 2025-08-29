@@ -713,7 +713,7 @@ microservicesecommerce/
 │   │   └── Program.cs                  # Configuração + Background Services
 │   │
 │   ├── 🛒 SalesService/               # Serviço de Vendas
-│   │   ├── Controllers/                # OrdersController
+│   │   ├── Controllers/               # OrdersController
 │   │   ├── Data/                      # SalesDbContext
 │   │   ├── Services/                  # OrderService, RabbitMQPublisher
 │   │   ├── Migrations/                # Migrações EF Core
@@ -721,21 +721,21 @@ microservicesecommerce/
 │   │   ├── appsettings.json           # Configurações (DB, RabbitMQ)
 │   │   └── Program.cs                 # Configuração da aplicação
 │   │
-│   └── 📚 Shared/                     # Biblioteca compartilhada
-│       ├── Models/                     # User, Product, Order, OrderItem
-│       ├── DTOs/                       # Data Transfer Objects
-│       └── Enums/                      # OrderStatus
+│   └── 📚 Shared/                    # Biblioteca compartilhada
+│       ├── Models/                    # User, Product, Order, OrderItem
+│       ├── DTOs/                      # Data Transfer Objects
+│       └── Enums/                     # OrderStatus
 │
-├── 📁 tests/                           # Projetos de teste
-│   ├── 🧪 StockService.Tests/          # Testes do StockService
-│   │   ├── Controllers/                # Testes dos controllers
-│   │   ├── Services/                   # Testes dos services
-│   │   └── Integration/                # Testes de integração
+├── 📁 tests/                         # Projetos de teste
+│   ├── 🧪 StockService.Tests/        # Testes do StockService
+│   │   ├── Controllers/              # Testes dos controllers
+│   │   ├── Services/                 # Testes dos services
+│   │   └── Integration/              # Testes de integração
 │   │
-│   └── 🧪 SalesService.Tests/         # Testes do SalesService
-│       ├── Controllers/             # Testes dos controllers
-│       ├── Services/               # Testes dos services
-│       └── Integration/            # Testes de integração
+│   └── 🧪 SalesService.Tests/        # Testes do SalesService
+│       ├── Controllers/              # Testes dos controllers
+│       ├── Services/                 # Testes dos services
+│       └── Integration/              # Testes de integração
 │
 ├── 📄 docker-compose.yml             # MySQL + RabbitMQ
 ├── 📄 MicroservicesEcommerce.sln     # Solution do Visual Studio
@@ -790,9 +790,9 @@ microservicesecommerce/
 ### 📖 Arquivos de Documentação
 
 | Arquivo | Descrição | Link |  
-|---------|-----------|  ----------- |
-| `Health-Dashboard.md` | Documentação completa do Health Dashboard | https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Health-Dashboard.md|  
-| `Troubleshooting.md` | Documentação para Erros | https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Troubleshooting.md |
+|---------|-----------|
+| [Health-Dashboard.md](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Health-Dashboard.md) | Documentação completa do Health Dashboard | 
+| [Troubleshooting.md`](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Troubleshooting.md) | Documentação para Erros |
 
 ---
 ### 🌍 Environments
