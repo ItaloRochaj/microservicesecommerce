@@ -789,7 +789,7 @@ microservicesecommerce/
 
 ### 📖 Arquivos de Documentação
 
-| Arquivo | Descrição | Link |  
+| Arquivo | Descrição |
 |---------|-----------|
 | [Health-Dashboard.md](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Health-Dashboard.md) | Documentação completa do Health Dashboard | 
 | [Troubleshooting.md`](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Troubleshooting.md) | Documentação para Erros |
