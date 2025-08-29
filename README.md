@@ -622,14 +622,14 @@ GET http://localhost:5002/health (Sales)
 ### 🗂️ Estrutura de Testes
 ```
 tests/
-├── StockService.Tests/     # Testes do serviço de estoque
-│   ├── Controllers/        # Testes dos controllers
+├── StockService.Tests/    # Testes do serviço de estoque
+│   ├── Controllers/       # Testes dos controllers
 │   ├── Services/          # Testes dos services
 │   └── Integration/       # Testes de integração
 └── SalesService.Tests/    # Testes do serviço de vendas
     ├── Controllers/       # Testes dos controllers
-    ├── Services/         # Testes dos services
-    └── Integration/      # Testes de integração
+    ├── Services/          # Testes dos services
+    └── Integration/       # Testes de integração
 ```
 
 ### 🚀 Executando Testes
@@ -693,44 +693,44 @@ public async Task CreateOrder_ValidRequest_ReturnsCreatedOrder()
 ## 📁 Estrutura do Projeto
 ```
 microservicesecommerce/
-├── 📁 src/                              # Código fonte
-│   ├── 🌐 ApiGateway/                   # API Gateway
-│   │   ├── Controllers/                 # AuthController
+├── 📁 src/                             # Código fonte
+│   ├── 🌐 ApiGateway/                  # API Gateway
+│   │   ├── Controllers/                # AuthController
 │   │   ├── Data/                       # DbContext para autenticação
 │   │   ├── Services/                   # AuthService, IAuthService
 │   │   ├── Properties/                 # launchSettings.json
-│   │   ├── appsettings.json           # Configurações (JWT, DB, YARP)
-│   │   └── Program.cs                 # Configuração da aplicação
+│   │   ├── appsettings.json            # Configurações (JWT, DB, YARP)
+│   │   └── Program.cs                  # Configuração da aplicação
 │   │
 │   ├── 📦 StockService/                # Serviço de Estoque
-│   │   ├── Controllers/               # ProductsController
-│   │   ├── Data/                     # StockDbContext
-│   │   ├── Services/                 # ProductService, RabbitMQService
-│   │   ├── Consumers/                # OrderCreatedConsumer
-│   │   ├── Migrations/               # Migrações EF Core
-│   │   ├── logs/                     # Arquivos de log
-│   │   ├── appsettings.json         # Configurações (DB, RabbitMQ)
-│   │   └── Program.cs               # Configuração + Background Services
+│   │   ├── Controllers/                # ProductsController
+│   │   ├── Data/                       # StockDbContext
+│   │   ├── Services/                   # ProductService, RabbitMQService
+│   │   ├── Consumers/                  # OrderCreatedConsumer
+│   │   ├── Migrations/                 # Migrações EF Core
+│   │   ├── logs/                       # Arquivos de log
+│   │   ├── appsettings.json            # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs                  # Configuração + Background Services
 │   │
 │   ├── 🛒 SalesService/               # Serviço de Vendas
-│   │   ├── Controllers/              # OrdersController
-│   │   ├── Data/                    # SalesDbContext
-│   │   ├── Services/                # OrderService, RabbitMQPublisher
-│   │   ├── Migrations/              # Migrações EF Core
-│   │   ├── logs/                    # Arquivos de log
-│   │   ├── appsettings.json        # Configurações (DB, RabbitMQ)
-│   │   └── Program.cs              # Configuração da aplicação
+│   │   ├── Controllers/                # OrdersController
+│   │   ├── Data/                      # SalesDbContext
+│   │   ├── Services/                  # OrderService, RabbitMQPublisher
+│   │   ├── Migrations/                # Migrações EF Core
+│   │   ├── logs/                      # Arquivos de log
+│   │   ├── appsettings.json           # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs                 # Configuração da aplicação
 │   │
 │   └── 📚 Shared/                     # Biblioteca compartilhada
-│       ├── Models/                   # User, Product, Order, OrderItem
-│       ├── DTOs/                    # Data Transfer Objects
-│       └── Enums/                   # OrderStatus
+│       ├── Models/                     # User, Product, Order, OrderItem
+│       ├── DTOs/                       # Data Transfer Objects
+│       └── Enums/                      # OrderStatus
 │
 ├── 📁 tests/                           # Projetos de teste
-│   ├── 🧪 StockService.Tests/         # Testes do StockService
-│   │   ├── Controllers/              # Testes dos controllers
-│   │   ├── Services/                # Testes dos services
-│   │   └── Integration/             # Testes de integração
+│   ├── 🧪 StockService.Tests/          # Testes do StockService
+│   │   ├── Controllers/                # Testes dos controllers
+│   │   ├── Services/                   # Testes dos services
+│   │   └── Integration/                # Testes de integração
 │   │
 │   └── 🧪 SalesService.Tests/         # Testes do SalesService
 │       ├── Controllers/             # Testes dos controllers
