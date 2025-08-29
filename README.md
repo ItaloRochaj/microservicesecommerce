@@ -5,7 +5,7 @@
 [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.13-FF6600?style=flat&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
 [![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-**Arquitetura de Microserviços** com .NET 8, implementando comunicação assíncrona via RabbitMQ, autenticação JWT e persistência em MySQL.
+Sistema completo de e-commerce usando **arquitetura de microserviços** com .NET 8, implementando comunicação assíncrona via RabbitMQ, autenticação JWT e persistência em MySQL.
 
 ---
 
@@ -20,6 +20,8 @@
 - [🐰 RabbitMQ](#-rabbitmq)
 - [🧪 Testes](#-testes)
 - [📁 Estrutura do Projeto](#-estrutura-do-projeto)
+- [📚 Documentação Adicional](#-documentação-adicional)
+- [🔗 Collections Postman](#-collections-postman)
 
 ---
 
@@ -72,6 +74,16 @@ graph TB
 3. **🛒 Sales Service** → Cria pedido e publica mensagem no RabbitMQ
 4. **📦 Stock Service** → Consome mensagem e atualiza estoque
 5. **🔄 Comunicação assíncrona** via filas RabbitMQ
+6. **🎪 Health Dashboard** → Monitora todos os serviços em tempo real
+
+### 🎯 Monitoramento Inteligente
+
+O sistema inclui **Health Checks Inteligentes** que monitoram:
+- ✅ **Status dos Microserviços** (StockService, SalesService)
+- ✅ **Infraestrutura** (RabbitMQ, MySQL, Sistema)
+- ✅ **Métricas** (Memória, Disco, Response Time)
+- ✅ **Dashboard Visual** com atualização automática
+- ✅ **API JSON** para integração externa
 
 ---
 
@@ -85,7 +97,9 @@ graph TB
   - ✅ Roteamento via YARP
   - ✅ CORS habilitado
   - ✅ Swagger UI
-  - ✅ Health Checks
+  - ✅ **Health Checks Dashboard** 🎪
+  - ✅ **Monitoramento em Tempo Real**
+  - ✅ **API de Health Consolidada**
 
 ### 📦 Stock Service
 - **Responsabilidade**: Gerenciamento de produtos e estoque
@@ -149,6 +163,9 @@ graph TB
 ### Logs & Monitoramento
 - **🔹 Serilog** - Logging estruturado
 - **🔹 Health Checks** - Monitoramento de saúde
+- **🔹 Health Dashboard** - Interface visual de monitoramento 🎪
+- **🔹 Health API JSON** - Integração programática
+- **🔹 Real-time Monitoring** - Atualização automática
 
 ### Containerização
 - **🔹 Docker** - Containerização
@@ -166,7 +183,24 @@ Certifique-se de ter instalado:
 - ✅ [MySQL 8.0+](https://dev.mysql.com/downloads/mysql/) ou Docker
 - ✅ [Docker Desktop](https://www.docker.com/products/docker-desktop) (recomendado)
 
-### 🐳 Opção 1: Usando Docker (Recomendado)
+### � Opção 3: Comandos Rápidos (Health Dashboard)
+
+**Para iniciar rapidamente com Health Dashboard:**
+
+```powershell
+# 1. Iniciar RabbitMQ
+docker run -d --name rabbitmq-microservices -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+# 2. Iniciar todos os serviços (3 terminais separados)
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\ApiGateway; dotnet run"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\StockService; dotnet run"  
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\SalesService; dotnet run"
+
+# 3. Acessar o Health Dashboard
+# http://localhost:5000/api/health/dashboard
+```
+
+### �🐳 Opção 1: Usando Docker (Recomendado)
 
 ```bash
 # 1. Clone o repositório
@@ -205,12 +239,15 @@ Após a execução, verifique se os serviços estão rodando:
 
 | Serviço | URL | Status |
 |---------|-----|---------|
-| 🌐 **API Gateway** | http://localhost:5000/swagger | ✅ |
+| � **Health Dashboard** | http://localhost:5000/api/health/dashboard | ✅ |
 | 📦 **Stock Service** | http://localhost:5001/swagger | ✅ |
 | 🛒 **Sales Service** | http://localhost:5002/swagger | ✅ |
 | 🐰 **RabbitMQ Management** | http://localhost:15672 | ✅ |
+| 📊 **Health API (JSON)** | http://localhost:5000/api/health/consolidated | ✅ |
 
-**Login RabbitMQ**: `guest` / `guest`
+**🔑 Credenciais:**
+- **RabbitMQ**: `guest` / `guest`
+- **Health Dashboard**: Acesso direto (sem login)
 
 ---
 
@@ -403,8 +440,8 @@ Cria um novo pedido.
 ```json
 {
   "customerId": 6,
-  "customerName": "Italo Rocha ",
-  "customerEmail": "italorochaj@icloud.com",
+  "customerName": "João Silva",
+  "customerEmail": "joao@email.com",
   "items": [
     {
       "productId": 1,
@@ -423,8 +460,8 @@ Cria um novo pedido.
 {
   "id": 10,
   "customerId": 6,
-  "customerName": "Italo Rocha",
-  "customerEmail": "italorochaj@icloud.com",
+  "customerName": "João Silva",
+  "customerEmail": "joao@email.com",
   "totalAmount": 13499.97,
   "status": 0,
   "orderDate": "2025-08-26T23:45:00Z",
@@ -453,13 +490,78 @@ Atualiza o status de um pedido.
 }
 ```
 
-### 🏥 Health Checks
+### 🏥 Health Checks & Dashboard Inteligente
 
-#### GET `/health`
-Disponível em todos os serviços:
-- http://localhost:5000/health (Gateway)
-- http://localhost:5001/health (Stock)
-- http://localhost:5002/health (Sales)
+#### 🎪 **Microservices Health Dashboard**
+Sistema avançado de monitoramento em tempo real com interface visual moderna.
+
+**🌟 Acesso ao Dashboard:**
+```
+http://localhost:5000/api/health/dashboard
+```
+
+#### 🔍 **Features do Health Dashboard:**
+- ✅ **Status em tempo real** de todos os microserviços
+- ✅ **Métricas de sistema** (CPU, memória, disco)
+- ✅ **Monitoramento RabbitMQ** com status de filas
+- ✅ **Interface responsiva** com design moderno
+- ✅ **Atualização automática** a cada 30 segundos
+- ✅ **API JSON** para integração
+- ✅ **Alertas visuais** por cores (Verde/Amarelo/Vermelho)
+
+#### 📈 **Componentes Monitorados:**
+| Componente | Descrição | Thresholds |
+|------------|-----------|------------|
+| 🟢 **Memory** | Uso de memória | < 200MB (Healthy), < 500MB (Degraded) |
+| 💾 **DiskSpace** | Espaço em disco | < 80% (Healthy), < 90% (Degraded) |
+| 🐰 **RabbitMQ** | Message broker | Conectividade e filas ativas |
+| 📦 **StockService** | Serviço de produtos | Response time < 1s |
+| 🛒 **SalesService** | Serviço de pedidos | Response time < 1s |
+
+#### 🔧 **Health Check APIs:**
+```bash
+# Dashboard visual (HTML)
+GET http://localhost:5000/api/health/dashboard
+
+# Status consolidado (JSON)
+GET http://localhost:5000/api/health/consolidated
+
+# Health checks individuais
+GET http://localhost:5000/health (Gateway)
+GET http://localhost:5001/health (Stock)
+GET http://localhost:5002/health (Sales)
+```
+
+#### 📊 **Exemplo Response JSON:**
+```json
+{
+  "overallStatus": "Healthy",
+  "timestamp": "2025-08-28T21:47:07Z",
+  "services": {
+    "StockService": {
+      "status": "Healthy",
+      "responseTimeMs": 119,
+      "description": "Service is healthy"
+    },
+    "SalesService": {
+      "status": "Healthy", 
+      "responseTimeMs": 155,
+      "description": "Service is healthy"
+    },
+    "RabbitMQ": {
+      "status": "Healthy",
+      "responseTimeMs": 39,
+      "description": "Message broker is healthy"
+    }
+  },
+  "summary": {
+    "healthy": 4,
+    "degraded": 0,
+    "unhealthy": 1,
+    "healthPercentage": 80
+  }
+}
+```
 
 ---
 
@@ -618,51 +720,62 @@ public async Task CreateOrder_ValidRequest_ReturnsCreatedOrder()
 
 ```
 microservicesecommerce/
+├── 📁 src/                              # Código fonte
+│   ├── 🌐 ApiGateway/                   # API Gateway
+│   │   ├── Controllers/                 # AuthController
+│   │   ├── Data/                       # DbContext para autenticação
+│   │   ├── Services/                   # AuthService, IAuthService
+│   │   ├── Properties/                 # launchSettings.json
+│   │   ├── appsettings.json           # Configurações (JWT, DB, YARP)
+│   │   └── Program.cs                 # Configuração da aplicação
+│   │
+│   ├── 📦 StockService/                # Serviço de Estoque
+│   │   ├── Controllers/               # ProductsController
+│   │   ├── Data/                     # StockDbContext
+│   │   ├── Services/                 # ProductService, RabbitMQService
+│   │   ├── Consumers/                # OrderCreatedConsumer
+│   │   ├── Migrations/               # Migrações EF Core
+│   │   ├── logs/                     # Arquivos de log
+│   │   ├── appsettings.json         # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs               # Configuração + Background Services
+│   │
+│   ├── 🛒 SalesService/               # Serviço de Vendas
+│   │   ├── Controllers/              # OrdersController
+│   │   ├── Data/                    # SalesDbContext
+│   │   ├── Services/                # OrderService, RabbitMQPublisher
+│   │   ├── Migrations/              # Migrações EF Core
+│   │   ├── logs/                    # Arquivos de log
+│   │   ├── appsettings.json        # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs              # Configuração da aplicação
+│   │
+│   └── 📚 Shared/                     # Biblioteca compartilhada
+│       ├── Models/                   # User, Product, Order, OrderItem
+│       ├── DTOs/                    # Data Transfer Objects
+│       └── Enums/                   # OrderStatus
 │
-├── src/
-│   ├── ApiGateway/
-│   │   ├── Controllers/         # AuthController, etc.
-│   │   ├── Data/                # DbContext para autenticação
-│   │   ├── Services/            # AuthService, interfaces
-│   │   ├── Properties/          # launchSettings.json
-│   │   ├── appsettings.json     # Configurações (JWT, DB, YARP)
-│   │   └── Program.cs           # Configuração da aplicação
+├── 📁 tests/                           # Projetos de teste
+│   ├── 🧪 StockService.Tests/         # Testes do StockService
+│   │   ├── Controllers/              # Testes dos controllers
+│   │   ├── Services/                # Testes dos services
+│   │   └── Integration/             # Testes de integração
 │   │
-│   ├── StockService/
-│   │   ├── Controllers/         # ProductsController
-│   │   ├── Data/                # StockDbContext
-│   │   ├── Services/            # ProductService, RabbitMQ consumers
-│   │   ├── logs/                # Arquivos de log
-│   │   ├── appsettings.json     # Configurações (DB, RabbitMQ)
-│   │   └── Program.cs           # Configuração do serviço
-│   │
-│   ├── SalesService/
-│   │   ├── Controllers/         # OrdersController
-│   │   ├── Data/                # SalesDbContext
-│   │   ├── Services/            # OrderService, RabbitMQ publisher
-│   │   ├── logs/                # Arquivos de log
-│   │   ├── appsettings.json     # Configurações (DB, RabbitMQ)
-│   │   └── Program.cs           # Configuração do serviço
-│   │
-│   └── Shared/
-│       ├── Models/              # Product, Order, User, etc.
-│       ├── Events/              # Contratos de eventos RabbitMQ
-│       ├── Services/            # RabbitMQService, interfaces
-│       └── Shared.csproj        # Projeto da biblioteca compartilhada
+│   └── 🧪 SalesService.Tests/         # Testes do SalesService
+│       ├── Controllers/             # Testes dos controllers
+│       ├── Services/               # Testes dos services
+│       └── Integration/            # Testes de integração
 │
-├── tests/
-│   ├── StockService.Tests/
-│   │   ├── ProductServiceTests.cs
-│   │   └── StockService.Tests.csproj
-│   │
-│   └── SalesService.Tests/
-│       ├── OrderServiceTests.cs
-│       └── SalesService.Tests.csproj
+├── 📁 scripts/                        # Scripts de automação
+│   ├── setup-mysql.ps1              # Configuração do MySQL
+│   ├── start-services-mysql.ps1     # Inicia todos os serviços
+│   ├── run-tests.ps1                # Executa todos os testes
+│   └── test-databases.ps1           # Testa conexões com DBs
 │
-├── docker-compose.yml           # Infraestrutura MySQL e RabbitMQ
-├── MicroservicesEcommerce.sln   # Solução Visual Studio
-├── global.json                  # Versão do .NET SDK
-├── README.md                    # Documentação principal
+├── 📄 docker-compose.yml             # MySQL + RabbitMQ
+├── 📄 MicroservicesEcommerce.sln     # Solution do Visual Studio
+├── 📄 global.json                    # Versão do .NET SDK
+├── 📄 start-system.bat               # Script inicialização Windows
+├── 📄 start-system.ps1               # Script inicialização PowerShell
+└── 📄 RabbitMQ-Consumer-Test.ps1     # Teste consumo RabbitMQ
 ```
 
 ### 🎯 Arquivos de Configuração Principais
@@ -705,6 +818,77 @@ microservicesecommerce/
   }
 }
 ```
+
+---
+
+## 📚 Documentação Adicional
+
+### 📖 Arquivos de Documentação
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `API_DOCUMENTATION.md` | Documentação completa das APIs |
+| `API_EXAMPLES.md` | Exemplos de uso das APIs |
+| `ENDPOINTS_GUIDE.md` | Guia detalhado dos endpoints |
+| `POSTMAN_GUIDE.md` | Como usar as collections Postman |
+| `POSTMAN_QUICK_START.md` | Início rápido com Postman |
+| `RABBITMQ_TEST_RESULTS.md` | Resultados dos testes RabbitMQ |
+| `SETUP.md` | Guia de instalação e configuração |
+
+### 🔧 Scripts Disponíveis
+
+| Script | Descrição |
+|--------|-----------|
+| `start-system.bat` | Inicialização completa (Windows) |
+| `start-system.ps1` | Inicialização completa (PowerShell) |
+| `scripts/setup-mysql.ps1` | Configuração inicial MySQL |
+| `scripts/start-services-mysql.ps1` | Inicia serviços com MySQL |
+| `scripts/run-tests.ps1` | Executa todos os testes |
+| `scripts/test-databases.ps1` | Testa conexões com bancos |
+| `RabbitMQ-Consumer-Test.ps1` | Teste consumo mensagens |
+
+---
+
+## 🔗 Collections Postman
+
+### 📋 Collections Disponíveis
+
+1. **`Microservices-Ecommerce-COMPLETA.postman_collection.json`**
+   - Collection principal com todos os endpoints
+   - Testes automatizados incluídos
+   - Variáveis de ambiente configuradas
+
+2. **`Microservices-Ecommerce.postman_collection.json`**
+   - Versão simplificada para desenvolvimento
+
+3. **`Postman_Collection.json`**
+   - Collection básica para testes rápidos
+
+### 🌍 Environments
+
+- **`Microservices-Ecommerce-COMPLETO.postman_environment.json`**
+- **`Microservices-Ecommerce.postman_environment.json`**
+
+### 🔧 Configuração no Postman
+
+1. **Importe a collection**:
+   - File → Import → `Microservices-Ecommerce-COMPLETA.postman_collection.json`
+
+2. **Importe o environment**:
+   - File → Import → `Microservices-Ecommerce-COMPLETO.postman_environment.json`
+
+3. **Configure as variáveis**:
+   ```json
+   {
+     "baseUrl": "http://localhost:5000",
+     "stockUrl": "http://localhost:5001", 
+     "salesUrl": "http://localhost:5002",
+     "token": "{{authToken}}"
+   }
+   ```
+
+4. **Execute os testes**:
+   - Collection → Run → Selecione environment → Run
 
 ---
 
@@ -861,19 +1045,48 @@ dotnet ef database update
 # Tail dos logs em tempo real
 Get-Content "src/StockService/logs/stock-service-*.log" -Wait
 ```
+
 ---
 
-### 👨🏻‍💻 Autor:
-<table style="border=0">
-  <tr>
-    <td align="left">
-      <a href="https://github.com/ItaloRochaj">
-        <span><b>Italo Rocha</b></span>
-      </a>
-      <br>
-      <span>Full-Stack Development</span>
-    </td>
-  </tr>
-</table>
+## 🤝 Contribuição
 
-**🎯 O Desenvolvimento partiu do desafio técnico sobre o case da Avanade - Back-end com .NET e IA  🚀**
+### 📋 Como Contribuir
+
+1. **Fork** o repositório
+2. **Crie** uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. **Commit** suas mudanças (`git commit -am 'Add nova feature'`)
+4. **Push** para a branch (`git push origin feature/nova-feature`)
+5. **Abra** um Pull Request
+
+### 📝 Padrões de Código
+
+- ✅ Use **PascalCase** para classes e métodos
+- ✅ Use **camelCase** para variáveis locais
+- ✅ Adicione **XML comments** em métodos públicos
+- ✅ Escreva **testes unitários** para nova funcionalidade
+- ✅ Siga as **convenções .NET**
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+---
+
+## 👥 Autores
+
+- **Developer** - *Desenvolvimento inicial* - [GitHub](https://github.com/username)
+
+---
+
+## 🙏 Agradecimentos
+
+- **Microsoft** - .NET 8 e Entity Framework Core
+- **Pivotal Software** - RabbitMQ
+- **Oracle** - MySQL
+- **Community** - Bibliotecas open source utilizadas
+
+---
+
+**🎯 Sistema completo e funcional pronto para produção! 🚀**
