@@ -1,4 +1,5 @@
-# 🎪 Microservices Health Dashboard - Documentação Completa
+# <img width="512" height="512" alt="microsservico" src="https://github.com/user-attachments/assets/bafb7af8-2031-4e4d-92e9-3e5cd7b6fe11" />
+ Microservices Health Dashboard - Documentação Completa
 
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=.net)](https://dotnet.microsoft.com/)
 [![Health Checks](https://img.shields.io/badge/Health%20Checks-Inteligentes-00C851?style=flat&logo=check-circle)](/)
@@ -1344,4 +1345,5 @@ O sistema está pronto para uso em produção, com todas as features essenciais 
       <span>Full-Stack Development</span>
     </td>
   </tr>
+
 </table>
