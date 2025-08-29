@@ -5,22 +5,21 @@
 [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.13-FF6600?style=flat&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
 [![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-🚀 Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foco em práticas modernas de desenvolvimento de software. Trata-se de um sistema completo de e-commerce construído com arquitetura de microserviços em .NET 8, utilizando RabbitMQ para comunicação assíncrona entre serviços, JWT para autenticação e MySQL para persistência de dados.
+Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foco em práticas modernas de desenvolvimento de software. Trata-se de um sistema completo de e-commerce construído com arquitetura de microserviços em .NET 8, utilizando RabbitMQ para comunicação assíncrona entre serviços, JWT para autenticação e MySQL para persistência de dados.
 
 ---
 ## 📋 Índice
 
-- [🏗️ Arquitetura](#️-arquitetura)
-- [🧩 Componentes](#-componentes)
-- [🔧 Tecnologias](#-tecnologias)
-- [🚀 Como Executar](#-como-executar)
-- [🗄️ Banco de Dados](#️-banco-de-dados)
-- [🔌 API Endpoints](#-api-endpoints)
-- [🐰 RabbitMQ](#-rabbitmq)
-- [🧪 Testes](#-testes)
-- [📁 Estrutura do Projeto](#-estrutura-do-projeto)
-- [📚 Documentação Adicional](#-documentação-adicional)
-- [🔗 Collections Postman](#-collections-postman)
+[🏗️ Arquitetura](#️-arquitetura)  
+[🧩 Componentes](#-componentes)  
+[🔧 Tecnologias](#-tecnologias)  
+[🚀 Como Executar](#-como-executar)  
+[🗄️ Banco de Dados](#️-banco-de-dados)  
+[🔌 API Endpoints](#-api-endpoints)  
+[🐰 RabbitMQ](#-rabbitmq)  
+[🧪 Testes](#-testes)  
+[📁 Estrutura do Projeto](#-estrutura-do-projeto)  
+[📚 Documentação Adicional](#-documentação-adicional)  
 
 ---
 ## 🏗️ Arquitetura
@@ -65,21 +64,21 @@ graph TB
 ```
 
 ---
-### Fluxo de Comunicação
-1. **📱 Cliente** → Autentica via **API Gateway**
-2. **🌐 Gateway** → Roteia requisições para microserviços
-3. **🛒 Sales Service** → Cria pedido e publica mensagem no RabbitMQ
-4. **📦 Stock Service** → Consome mensagem e atualiza estoque
-5. **🔄 Comunicação assíncrona** via filas RabbitMQ
-6. **🎪 Health Dashboard** → Monitora todos os serviços em tempo real
+### Fluxo de Comunicação  
+**📱 Cliente** → Autentica via **API Gateway**  
+**🌐 Gateway** → Roteia requisições para microserviços  
+**🛒 Sales Service** → Cria pedido e publica mensagem no RabbitMQ  
+**📦 Stock Service** → Consome mensagem e atualiza estoque  
+**🔄 Comunicação assíncrona** via filas RabbitMQ  
+**🎪 Health Dashboard** → Monitora todos os serviços em tempo real  
 
 ### 🎯 Monitoramento Inteligente
-O sistema inclui **Health Checks Inteligentes** que monitoram:
-- ✅ **Status dos Microserviços** (StockService, SalesService)
-- ✅ **Infraestrutura** (RabbitMQ, MySQL, Sistema)
-- ✅ **Métricas** (Memória, Disco, Response Time)
-- ✅ **Dashboard Visual** com atualização automática
-- ✅ **API JSON** para integração externa
+O sistema inclui **Health Checks Inteligentes** que monitoram:    
+✅ **Status dos Microserviços** (StockService, SalesService)  
+✅ **Infraestrutura** (RabbitMQ, MySQL, Sistema)  
+✅ **Métricas** (Memória, Disco, Response Time)  
+✅ **Dashboard Visual** com atualização automática  
+✅ **API JSON** para integração externa
 
 ---
 ## 🧩 Componentes
@@ -87,110 +86,94 @@ O sistema inclui **Health Checks Inteligentes** que monitoram:
 ### 🌐 API Gateway
 - **Responsabilidade**: Ponto de entrada único, autenticação, roteamento
 - **Porta**: 5000
-- **Funcionalidades**:
-  - ✅ Autenticação JWT
-  - ✅ Roteamento via YARP
-  - ✅ CORS habilitado
-  - ✅ Swagger UI
-  - ✅ **Health Checks Dashboard** 🎪
-  - ✅ **Monitoramento em Tempo Real**
-  - ✅ **API de Health Consolidada**
+- **Funcionalidades**:  
+✅ Autenticação JWT  
+✅ Roteamento via YARP  
+✅ CORS habilitado  
+✅ Swagger UI  
+✅ **Health Checks Dashboard** 🎪  
+✅ **Monitoramento em Tempo Real**  
+✅ **API de Health Consolidada**  
 
 ### 📦 Stock Service
 - **Responsabilidade**: Gerenciamento de produtos e estoque
 - **Porta**: 5001
-- **Funcionalidades**:
-  - ✅ CRUD de produtos
-  - ✅ Controle de estoque
-  - ✅ Validação de disponibilidade
-  - ✅ Consumo de mensagens RabbitMQ
-  - ✅ Logs estruturados (Serilog)
+- **Funcionalidades**:  
+✅ CRUD de produtos  
+✅ Controle de estoque  
+✅ Validação de disponibilidade  
+✅ Consumo de mensagens RabbitMQ  
+✅ Logs estruturados (Serilog)  
 
 ### 🛒 Sales Service
 - **Responsabilidade**: Gerenciamento de vendas e pedidos
 - **Porta**: 5002
-- **Funcionalidades**:
-  - ✅ CRUD de pedidos
-  - ✅ Cálculo de totais
-  - ✅ Publicação de eventos RabbitMQ
-  - ✅ Validação de dados
-  - ✅ Logs estruturados (Serilog)
+- **Funcionalidades**:  
+✅ CRUD de pedidos  
+✅ Cálculo de totais  
+✅ Publicação de eventos RabbitMQ  
+✅ Validação de dados  
+✅ Logs estruturados (Serilog)  
 
 ### 📚 Shared Library
 - **Responsabilidade**: Modelos e utilitários compartilhados
-- **Contém**:
-  - ✅ Models (User, Product, Order)
-  - ✅ DTOs
-  - ✅ Enums (OrderStatus)
-  - ✅ Interfaces compartilhadas
+- **Contém**:  
+✅ Models (User, Product, Order)  
+✅ DTOs  
+✅ Enums (OrderStatus)  
+✅ Interfaces compartilhadas
 
 ---
 ## 🔧 Tecnologias
 
 ### Backend Framework
-- **🔹 .NET 8** - Framework principal
-- **🔹 ASP.NET Core** - Web API
-- **🔹 Entity Framework Core** - ORM
-- **🔹 AutoMapper** - Mapeamento de objetos
+**🔹 .NET 8** - Framework principal  
+**🔹 ASP.NET Core** - Web API  
+**🔹 Entity Framework Core** - ORM  
+**🔹 AutoMapper** - Mapeamento de objetos  
 
 ### Banco de Dados
-- **🔹 MySQL 8.0** - Banco principal
-- **🔹 Pomelo.EntityFrameworkCore.MySQL** - Provider EF Core
+**🔹 MySQL 8.0** - Banco principal  
+**🔹 Pomelo.EntityFrameworkCore.MySQL** - Provider EF Core  
 
 ### Mensageria
-- **🔹 RabbitMQ 3.13** - Message Broker
-- **🔹 RabbitMQ.Client** - Cliente .NET
+**🔹 RabbitMQ 3.13** - Message Broker  
+**🔹 RabbitMQ.Client** - Cliente .NET  
 
 ### Autenticação & Segurança
-- **🔹 JWT Bearer** - Autenticação stateless
-- **🔹 BCrypt** - Hash de senhas
+**🔹 JWT Bearer** - Autenticação stateless  
+**🔹 BCrypt** - Hash de senhas  
 
 ### API Gateway
-- **🔹 YARP (Yet Another Reverse Proxy)** - Proxy reverso
-- **🔹 Microsoft.AspNetCore.Authentication.JwtBearer**
+**🔹 YARP (Yet Another Reverse Proxy)** - Proxy reverso  
+**🔹 Microsoft.AspNetCore.Authentication.JwtBearer**  
 
 ### Documentação & Testes
-- **🔹 Swagger/OpenAPI** - Documentação automática
-- **🔹 xUnit** - Framework de testes
-- **🔹 Moq** - Mocking para testes
+**🔹 Swagger/OpenAPI** - Documentação automática  
+**🔹 xUnit** - Framework de testes  
+**🔹 Moq** - Mocking para testes  
 
 ### Logs & Monitoramento
-- **🔹 Serilog** - Logging estruturado
-- **🔹 Health Checks** - Monitoramento de saúde
-- **🔹 Health Dashboard** - Interface visual de monitoramento 🎪
-- **🔹 Health API JSON** - Integração programática
-- **🔹 Real-time Monitoring** - Atualização automática
+**🔹 Serilog** - Logging estruturado  
+**🔹 Health Checks** - Monitoramento de saúde  
+**🔹 Health Dashboard** - Interface visual de monitoramento 🎪  
+**🔹 Health API JSON** - Integração programática  
+**🔹 Real-time Monitoring** - Atualização automática  
 
 ### Containerização
-- **🔹 Docker** - Containerização
-- **🔹 Docker Compose** - Orquestração local
+**🔹 Docker** - Containerização  
+**🔹 Docker Compose** - Orquestração local  
 
 ---
 ## 🚀 Como Executar
 
 ### 🔧 Pré-requisitos
-Certifique-se de ter instalado:
-- ✅ [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- ✅ [MySQL 8.0+](https://dev.mysql.com/downloads/mysql/) ou Docker
-- ✅ [Docker Desktop](https://www.docker.com/products/docker-desktop) (recomendado)
+Certifique-se de ter instalado:  
+✅ [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)  
+✅ [MySQL 8.0+](https://dev.mysql.com/downloads/mysql/) ou Docker  
+✅ [Docker Desktop](https://www.docker.com/products/docker-desktop) (recomendado)  
 
-### � Opção 3: Comandos Rápidos (Health Dashboard)
-
-**Para iniciar rapidamente com Health Dashboard:**
-```powershell
-# 1. Iniciar RabbitMQ
-docker run -d --name rabbitmq-microservices -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-
-# 2. Iniciar todos os serviços (3 terminais separados)
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\ApiGateway; dotnet run"
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\StockService; dotnet run"  
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\SalesService; dotnet run"
-
-# 3. Acessar o Health Dashboard
-# http://localhost:5000/api/health/dashboard
-```
-
-### �🐳 Opção 1: Usando Docker (Recomendado)
+### 🐳 Opção 1: Usando Docker (Recomendado)
 ```bash
 # 1. Clone o repositório
 git clone <repository-url>
@@ -221,6 +204,22 @@ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 .\scripts\start-services-mysql.ps1
 ```
 
+### ▶️ Opção 3: Comandos Rápidos (Health Dashboard)
+
+**Para iniciar rapidamente com Health Dashboard:**
+```powershell
+# 1. Iniciar RabbitMQ
+docker run -d --name rabbitmq-microservices -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+# 2. Iniciar todos os serviços (3 terminais separados)
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\ApiGateway; dotnet run"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\StockService; dotnet run"  
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\SalesService; dotnet run"
+
+# 3. Acessar o Health Dashboard
+# http://localhost:5000/api/health/dashboard
+```
+
 ### 🌟 Verificação da Instalação
 Após a execução, verifique se os serviços estão rodando:
 
@@ -240,11 +239,11 @@ Após a execução, verifique se os serviços estão rodando:
 ## 🗄️ Banco de Dados
 
 ### 📊 Configuração Geral
-**Credenciais MySQL:**
-- 🔑 **Usuário**: `developer`
-- 🔐 **Senha**: `Luke@2020`
-- 🌐 **Host**: `localhost`
-- 🔌 **Porta**: `3306`
+**Credenciais MySQL:**  
+🔑 **Usuário**: `developer`  
+🔐 **Senha**: `Luke@2020`  
+🌐 **Host**: `localhost`  
+🔌 **Porta**: `3306`  
 
 ### 🗃️ Estrutura dos Bancos
 
@@ -482,14 +481,14 @@ Sistema avançado de monitoramento em tempo real com interface visual moderna.
 http://localhost:5000/api/health/dashboard
 ```
 
-#### 🔍 **Features do Health Dashboard:**
-- ✅ **Status em tempo real** de todos os microserviços
-- ✅ **Métricas de sistema** (CPU, memória, disco)
-- ✅ **Monitoramento RabbitMQ** com status de filas
-- ✅ **Interface responsiva** com design moderno
-- ✅ **Atualização automática** a cada 30 segundos
-- ✅ **API JSON** para integração
-- ✅ **Alertas visuais** por cores (Verde/Amarelo/Vermelho)
+#### 🔍 **Features do Health Dashboard:**  
+✅ **Status em tempo real** de todos os microserviços  
+✅ **Métricas de sistema** (CPU, memória, disco)  
+✅ **Monitoramento RabbitMQ** com status de filas  
+✅ **Interface responsiva** com design moderno  
+✅ **Atualização automática** a cada 30 segundos  
+✅ **API JSON** para integração  
+✅ **Alertas visuais** por cores (Verde/Amarelo/Vermelho)  
 
 #### 📈 **Componentes Monitorados:**
 | Componente | Descrição | Thresholds |
@@ -549,12 +548,12 @@ GET http://localhost:5002/health (Sales)
 ## 🐰 RabbitMQ
 
 ### 📋 Configuração
-**Conexão:**
-- 🌐 **Host**: `localhost`
-- 🔌 **Porta AMQP**: `5672`
-- 🖥️ **Management UI**: `15672`
-- 🔑 **Usuário**: `guest`
-- 🔐 **Senha**: `guest`
+**Conexão:**  
+🌐 **Host**: `localhost`  
+🔌 **Porta AMQP**: `5672`  
+🖥️ **Management UI**: `15672`  
+🔑 **Usuário**: `guest`  
+🔐 **Senha**: `guest`  
 
 ### 📬 Filas Implementadas
 
@@ -596,13 +595,13 @@ GET http://localhost:5002/health (Sales)
 ```
 
 ---
-### 🔄 Fluxo de Mensagens
-1. **🛒 Cliente cria pedido** → Sales Service
-2. **📝 Sales Service** → Persiste pedido no banco
-3. **📤 Sales Service** → Publica mensagem na fila `order-created`
-4. **📥 Stock Service** → Consome mensagem da fila
-5. **📦 Stock Service** → Atualiza estoque dos produtos
-6. **📤 Stock Service** → Publica mensagem na fila `stock-update` (opcional)
+### 🔄 Fluxo de Mensagens  
+**🛒 Cliente cria pedido** → Sales Service  
+**📝 Sales Service** → Persiste pedido no banco  
+**📤 Sales Service** → Publica mensagem na fila `order-created`  
+**📥 Stock Service** → Consome mensagem da fila  
+**📦 Stock Service** → Atualiza estoque dos produtos  
+**📤 Stock Service** → Publica mensagem na fila `stock-update` (opcional)  
 
 ### 🛠️ Ferramentas de Debug
 
@@ -650,18 +649,18 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ### 📊 Tipos de Testes
 
-#### 🔬 Testes Unitários
-- ✅ Controllers
-- ✅ Services  
-- ✅ Repositories
-- ✅ Validators
-- ✅ Mappers
+#### 🔬 Testes Unitários  
+✅ Controllers  
+✅ Services  
+✅ Repositories  
+✅ Validators  
+✅ Mappers  
 
 #### 🔗 Testes de Integração
-- ✅ APIs completas
-- ✅ Banco de dados
-- ✅ RabbitMQ
-- ✅ Autenticação
+✅ APIs completas  
+✅ Banco de dados  
+✅ RabbitMQ  
+✅ Autenticação  
 
 #### 🧪 Exemplo de Teste
 ```csharp
@@ -800,7 +799,6 @@ microservicesecommerce/
 | `RABBITMQ_TEST_RESULTS.md` | Resultados dos testes RabbitMQ |
 | `SETUP.md` | Guia de instalação e configuração |
 
-
 ---
 ### 🌍 Environments
 - **`Microservices-Ecommerce-COMPLETO.postman_environment.json`**
@@ -843,17 +841,16 @@ services:
 ### 📊 Monitoramento
 
 #### Health Checks Implementados
-- ✅ Database connectivity
-- ✅ RabbitMQ connectivity  
-- ✅ Service availability
+✅ Database connectivity  
+✅ RabbitMQ connectivity    
+✅ Service availability  
 
 #### Logs Estruturados
-- ✅ Serilog com formatação JSON
-- ✅ Logs salvos em arquivos por serviço
-- ✅ Níveis configuráveis (Info, Warning, Error)
+✅ Serilog com formatação JSON  
+✅ Logs salvos em arquivos por serviço  
+✅ Níveis configuráveis (Info, Warning, Error)  
 
 ---
-
 ## 🔧 Configurações Avançadas
 
 ### 🔐 Segurança
@@ -924,11 +921,11 @@ Get-Content "src/StockService/logs/stock-service-*.log" -Wait
 ```
 
 ### 📝 Padrões de Código
-- ✅ Use **PascalCase** para classes e métodos
-- ✅ Use **camelCase** para variáveis locais
-- ✅ Adicione **XML comments** em métodos públicos
-- ✅ Escreva **testes unitários** para nova funcionalidade
-- ✅ Siga as **convenções .NET**
+✅ Use **PascalCase** para classes e métodos  
+✅ Use **camelCase** para variáveis locais  
+✅ Adicione **XML comments** em métodos públicos  
+✅ Escreva **testes unitários** para nova funcionalidade  
+✅ Siga as **convenções .NET**
 
 ---
 ### 👨🏻‍💻 Autor:
