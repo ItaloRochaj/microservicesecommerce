@@ -8,7 +8,7 @@
 Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foco em práticas modernas de desenvolvimento de software. Trata-se de um sistema completo de e-commerce construído com arquitetura de microserviços em .NET 8, utilizando RabbitMQ para comunicação assíncrona entre serviços, JWT para autenticação e MySQL para persistência de dados.
 
 ---
-## 📋 Índice
+### 📋 Índice
 
 [🏗️ Arquitetura](#️-arquitetura)  
 [🧩 Componentes](#-componentes)  
@@ -20,7 +20,7 @@ Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foc
 [🧪 Testes](#-testes)  
 [📁 Estrutura do Projeto](#-estrutura-do-projeto)  
 [📚 Documentação Adicional](#-documentação-adicional)  
-]
+
 ---
 ## 🏗️ Arquitetura
 
