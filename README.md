@@ -789,10 +789,47 @@ microservicesecommerce/
 
 ### 📖 Arquivos de Documentação
 
+## 🏗️ Arquitetura de Implementação do Health Dashboard
+
+### 📐 **Diagrama de Componentes**
+
+```mermaid
+graph TB
+    subgraph "🛰️ Health Dashboard System"
+        Dashboard[🖥️ Visual Dashboard<br/>HTML + CSS + JS]
+        HealthAPI[📊 Health API<br/>JSON Endpoints]
+        HealthService[🔧 Health Service<br/>Core Logic]
+        HealthController[🎮 Health Controller<br/>API Gateway]
+    end
+    
+    subgraph "📊 Monitored Components"
+        StockService[📦 Stock Service<br/>:5001]
+        SalesService[🛒 Sales Service<br/>:5002]
+        RabbitMQ[🐰 RabbitMQ<br/>:5672]
+        MySQL[🗄️ MySQL<br/>:3306]
+        System[💻 System Resources<br/>Memory, Disk, CPU]
+    end
+    
+    Dashboard --> HealthAPI
+    HealthAPI --> HealthController
+    HealthController --> HealthService
+    
+    HealthService --> StockService
+    HealthService --> SalesService
+    HealthService --> RabbitMQ
+    HealthService --> MySQL
+    HealthService --> System
+    
+    style Dashboard fill:#e3f2fd
+    style HealthService fill:#f3e5f5
+    style StockService fill:#e8f5e8
+    style SalesService fill:#fff3e0
+```
+
+
 | Arquivo | Descrição |
 |---------|-----------|
 | [Health-Dashboard.md](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Health-Dashboard.md) | Documentação completa do Health Dashboard | 
-| [Troubleshooting.md`](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Troubleshooting.md) | Documentação para Erros |
 
 ---
 ### 🌍 Environments
