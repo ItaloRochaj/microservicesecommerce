@@ -26,18 +26,22 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("internal", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Endpoints Internos - Não usar diretamente", Version = "v1" });
 });
 
-// Health Checks
-builder.Services.AddHealthChecks();
-
 // Entity Framework
 builder.Services.AddDbContext<StockDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")!)));
 
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<StockDbContext>();
+
 // Services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddSingleton<IRabbitMQService>(provider =>
-    new RabbitMQService(builder.Configuration.GetConnectionString("RabbitMQ") ?? "amqp://guest:guest@localhost:5672/"));
+{
+    var logger = provider.GetService<ILogger<RabbitMQService>>();
+    return new RabbitMQService(builder.Configuration.GetConnectionString("RabbitMQ") ?? "amqp://guest:guest@localhost:5672/", logger);
+});
 
 // Background Services
 builder.Services.AddHostedService<StockUpdateBackgroundService>();

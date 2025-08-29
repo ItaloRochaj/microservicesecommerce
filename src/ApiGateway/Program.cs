@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ApiGateway.Data;
 using ApiGateway.Services;
+using Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,13 +13,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Health Checks
-builder.Services.AddHealthChecks();
-
 // Entity Framework
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")!)));
+
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AuthDbContext>();
+
+// Health Check Service
+builder.Services.AddHttpClient<IHealthCheckService, HealthCheckService>();
+builder.Services.AddScoped<IHealthCheckService, HealthCheckService>();
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();

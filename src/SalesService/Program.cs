@@ -26,13 +26,14 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("internal", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Endpoints Internos - Não usar diretamente", Version = "v1" });
 });
 
-// Health Checks
-builder.Services.AddHealthChecks();
-
 // Entity Framework
 builder.Services.AddDbContext<SalesDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")!)));
+
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<SalesDbContext>();
 
 // Services
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -53,7 +54,10 @@ builder.Services.AddHttpClient<IStockServiceClient, StockServiceClient>(client =
 
 // RabbitMQ
 builder.Services.AddSingleton<IRabbitMQService>(provider =>
-    new RabbitMQService(builder.Configuration.GetConnectionString("RabbitMQ") ?? "amqp://guest:guest@localhost:5672/"));
+{
+    var logger = provider.GetService<ILogger<RabbitMQService>>();
+    return new RabbitMQService(builder.Configuration.GetConnectionString("RabbitMQ") ?? "amqp://guest:guest@localhost:5672/", logger);
+});
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
