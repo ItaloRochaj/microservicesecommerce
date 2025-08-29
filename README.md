@@ -5,10 +5,9 @@
 [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.13-FF6600?style=flat&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
 [![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-Sistema completo de e-commerce usando **arquitetura de microserviços** com .NET 8, implementando comunicação assíncrona via RabbitMQ, autenticação JWT e persistência em MySQL.
+🚀 Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foco em práticas modernas de desenvolvimento de software. Trata-se de um sistema completo de e-commerce construído com arquitetura de microserviços em .NET 8, utilizando RabbitMQ para comunicação assíncrona entre serviços, JWT para autenticação e MySQL para persistência de dados.
 
 ---
-
 ## 📋 Índice
 
 - [🏗️ Arquitetura](#️-arquitetura)
@@ -24,11 +23,9 @@ Sistema completo de e-commerce usando **arquitetura de microserviços** com .NET
 - [🔗 Collections Postman](#-collections-postman)
 
 ---
-
 ## 🏗️ Arquitetura
 
 ### Diagrama da Arquitetura
-
 ```mermaid
 graph TB
     Client[👤 Cliente]
@@ -67,8 +64,8 @@ graph TB
     style RabbitMQ fill:#fff3e0
 ```
 
+---
 ### Fluxo de Comunicação
-
 1. **📱 Cliente** → Autentica via **API Gateway**
 2. **🌐 Gateway** → Roteia requisições para microserviços
 3. **🛒 Sales Service** → Cria pedido e publica mensagem no RabbitMQ
@@ -77,7 +74,6 @@ graph TB
 6. **🎪 Health Dashboard** → Monitora todos os serviços em tempo real
 
 ### 🎯 Monitoramento Inteligente
-
 O sistema inclui **Health Checks Inteligentes** que monitoram:
 - ✅ **Status dos Microserviços** (StockService, SalesService)
 - ✅ **Infraestrutura** (RabbitMQ, MySQL, Sistema)
@@ -86,7 +82,6 @@ O sistema inclui **Health Checks Inteligentes** que monitoram:
 - ✅ **API JSON** para integração externa
 
 ---
-
 ## 🧩 Componentes
 
 ### 🌐 API Gateway
@@ -130,7 +125,6 @@ O sistema inclui **Health Checks Inteligentes** que monitoram:
   - ✅ Interfaces compartilhadas
 
 ---
-
 ## 🔧 Tecnologias
 
 ### Backend Framework
@@ -172,13 +166,10 @@ O sistema inclui **Health Checks Inteligentes** que monitoram:
 - **🔹 Docker Compose** - Orquestração local
 
 ---
-
 ## 🚀 Como Executar
 
 ### 🔧 Pré-requisitos
-
 Certifique-se de ter instalado:
-
 - ✅ [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - ✅ [MySQL 8.0+](https://dev.mysql.com/downloads/mysql/) ou Docker
 - ✅ [Docker Desktop](https://www.docker.com/products/docker-desktop) (recomendado)
@@ -186,7 +177,6 @@ Certifique-se de ter instalado:
 ### � Opção 3: Comandos Rápidos (Health Dashboard)
 
 **Para iniciar rapidamente com Health Dashboard:**
-
 ```powershell
 # 1. Iniciar RabbitMQ
 docker run -d --name rabbitmq-microservices -p 5672:5672 -p 15672:15672 rabbitmq:3-management
@@ -201,7 +191,6 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\micr
 ```
 
 ### �🐳 Opção 1: Usando Docker (Recomendado)
-
 ```bash
 # 1. Clone o repositório
 git clone <repository-url>
@@ -217,7 +206,6 @@ docker-compose up -d
 ```
 
 ### 🔧 Opção 2: Instalação Manual
-
 ```bash
 # 1. Clone o repositório
 git clone <repository-url>
@@ -234,7 +222,6 @@ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
 ### 🌟 Verificação da Instalação
-
 Após a execução, verifique se os serviços estão rodando:
 
 | Serviço | URL | Status |
@@ -250,11 +237,9 @@ Após a execução, verifique se os serviços estão rodando:
 - **Health Dashboard**: Acesso direto (sem login)
 
 ---
-
 ## 🗄️ Banco de Dados
 
 ### 📊 Configuração Geral
-
 **Credenciais MySQL:**
 - 🔑 **Usuário**: `developer`
 - 🔐 **Senha**: `Luke@2020`
@@ -316,11 +301,9 @@ OrderItems
 ```
 
 ### 🔄 Migrations
-
 As migrações são executadas automaticamente na inicialização dos serviços.
 
 **Para executar manualmente:**
-
 ```bash
 # Stock Service
 cd src/StockService
@@ -336,7 +319,6 @@ dotnet ef database update
 ```
 
 **Para criar nova migration:**
-
 ```bash
 # Exemplo para Stock Service
 cd src/StockService
@@ -344,7 +326,6 @@ dotnet ef migrations add NomeDaMigracao
 ```
 
 ---
-
 ## 🔌 API Endpoints
 
 ### 🔐 Autenticação
@@ -490,6 +471,7 @@ Atualiza o status de um pedido.
 }
 ```
 
+---
 ### 🏥 Health Checks & Dashboard Inteligente
 
 #### 🎪 **Microservices Health Dashboard**
@@ -564,11 +546,9 @@ GET http://localhost:5002/health (Sales)
 ```
 
 ---
-
 ## 🐰 RabbitMQ
 
 ### 📋 Configuração
-
 **Conexão:**
 - 🌐 **Host**: `localhost`
 - 🔌 **Porta AMQP**: `5672`
@@ -615,8 +595,8 @@ GET http://localhost:5002/health (Sales)
 }
 ```
 
+---
 ### 🔄 Fluxo de Mensagens
-
 1. **🛒 Cliente cria pedido** → Sales Service
 2. **📝 Sales Service** → Persiste pedido no banco
 3. **📤 Sales Service** → Publica mensagem na fila `order-created`
@@ -638,11 +618,9 @@ GET http://localhost:5002/health (Sales)
 - Navegue para **Queues** → Selecione fila → **Get messages**
 
 ---
-
 ## 🧪 Testes
 
 ### 🗂️ Estrutura de Testes
-
 ```
 tests/
 ├── StockService.Tests/     # Testes do serviço de estoque
@@ -656,7 +634,6 @@ tests/
 ```
 
 ### 🚀 Executando Testes
-
 ```bash
 # Executar todos os testes
 dotnet test
@@ -687,7 +664,6 @@ dotnet test --collect:"XPlat Code Coverage"
 - ✅ Autenticação
 
 #### 🧪 Exemplo de Teste
-
 ```csharp
 [Fact]
 public async Task CreateOrder_ValidRequest_ReturnsCreatedOrder()
@@ -715,9 +691,7 @@ public async Task CreateOrder_ValidRequest_ReturnsCreatedOrder()
 ```
 
 ---
-
 ## 📁 Estrutura do Projeto
-
 ```
 microservicesecommerce/
 ├── 📁 src/                              # Código fonte
@@ -764,18 +738,10 @@ microservicesecommerce/
 │       ├── Services/               # Testes dos services
 │       └── Integration/            # Testes de integração
 │
-├── 📁 scripts/                        # Scripts de automação
-│   ├── setup-mysql.ps1              # Configuração do MySQL
-│   ├── start-services-mysql.ps1     # Inicia todos os serviços
-│   ├── run-tests.ps1                # Executa todos os testes
-│   └── test-databases.ps1           # Testa conexões com DBs
-│
 ├── 📄 docker-compose.yml             # MySQL + RabbitMQ
 ├── 📄 MicroservicesEcommerce.sln     # Solution do Visual Studio
 ├── 📄 global.json                    # Versão do .NET SDK
-├── 📄 start-system.bat               # Script inicialização Windows
-├── 📄 start-system.ps1               # Script inicialização PowerShell
-└── 📄 RabbitMQ-Consumer-Test.ps1     # Teste consumo RabbitMQ
+
 ```
 
 ### 🎯 Arquivos de Configuração Principais
@@ -820,7 +786,6 @@ microservicesecommerce/
 ```
 
 ---
-
 ## 📚 Documentação Adicional
 
 ### 📖 Arquivos de Documentação
@@ -835,69 +800,17 @@ microservicesecommerce/
 | `RABBITMQ_TEST_RESULTS.md` | Resultados dos testes RabbitMQ |
 | `SETUP.md` | Guia de instalação e configuração |
 
-### 🔧 Scripts Disponíveis
-
-| Script | Descrição |
-|--------|-----------|
-| `start-system.bat` | Inicialização completa (Windows) |
-| `start-system.ps1` | Inicialização completa (PowerShell) |
-| `scripts/setup-mysql.ps1` | Configuração inicial MySQL |
-| `scripts/start-services-mysql.ps1` | Inicia serviços com MySQL |
-| `scripts/run-tests.ps1` | Executa todos os testes |
-| `scripts/test-databases.ps1` | Testa conexões com bancos |
-| `RabbitMQ-Consumer-Test.ps1` | Teste consumo mensagens |
 
 ---
-
-## 🔗 Collections Postman
-
-### 📋 Collections Disponíveis
-
-1. **`Microservices-Ecommerce-COMPLETA.postman_collection.json`**
-   - Collection principal com todos os endpoints
-   - Testes automatizados incluídos
-   - Variáveis de ambiente configuradas
-
-2. **`Microservices-Ecommerce.postman_collection.json`**
-   - Versão simplificada para desenvolvimento
-
-3. **`Postman_Collection.json`**
-   - Collection básica para testes rápidos
-
 ### 🌍 Environments
-
 - **`Microservices-Ecommerce-COMPLETO.postman_environment.json`**
 - **`Microservices-Ecommerce.postman_environment.json`**
-
-### 🔧 Configuração no Postman
-
-1. **Importe a collection**:
-   - File → Import → `Microservices-Ecommerce-COMPLETA.postman_collection.json`
-
-2. **Importe o environment**:
-   - File → Import → `Microservices-Ecommerce-COMPLETO.postman_environment.json`
-
-3. **Configure as variáveis**:
-   ```json
-   {
-     "baseUrl": "http://localhost:5000",
-     "stockUrl": "http://localhost:5001", 
-     "salesUrl": "http://localhost:5002",
-     "token": "{{authToken}}"
-   }
-   ```
-
-4. **Execute os testes**:
-   - Collection → Run → Selecione environment → Run
-
 ---
 
 ## 🚀 Deploy e Produção
 
 ### 🐳 Docker Compose Completo
-
 Para deploy completo com todos os serviços:
-
 ```yaml
 version: '3.8'
 services:
@@ -926,6 +839,7 @@ services:
   # Adicione aqui os serviços .NET quando dockerizados
 ```
 
+---
 ### 📊 Monitoramento
 
 #### Health Checks Implementados
@@ -996,43 +910,6 @@ channel.QueueDeclare(
 );
 ```
 
----
-
-## 🐛 Troubleshooting
-
-### ❗ Problemas Comuns
-
-#### 1. Erro de Conexão MySQL
-```
-Solution: Verifique se o MySQL está rodando na porta 3306
-Command: docker ps | grep mysql
-```
-
-#### 2. Erro de Conexão RabbitMQ
-```
-Solution: Verifique se o RabbitMQ está acessível
-URL: http://localhost:15672
-Login: guest/guest
-```
-
-#### 3. Erro 502 Bad Gateway
-```
-Solution: Verifique se todos os serviços estão rodando
-Commands:
-- netstat -ano | findstr ":5000"  # Gateway
-- netstat -ano | findstr ":5001"  # Stock  
-- netstat -ano | findstr ":5002"  # Sales
-```
-
-#### 4. Erro de Migração
-```bash
-# Recrie as migrações
-cd src/StockService
-dotnet ef migrations remove
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
-
 ### 🔍 Logs de Debug
 
 #### Localização dos Logs
@@ -1046,20 +923,7 @@ dotnet ef database update
 Get-Content "src/StockService/logs/stock-service-*.log" -Wait
 ```
 
----
-
-## 🤝 Contribuição
-
-### 📋 Como Contribuir
-
-1. **Fork** o repositório
-2. **Crie** uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. **Commit** suas mudanças (`git commit -am 'Add nova feature'`)
-4. **Push** para a branch (`git push origin feature/nova-feature`)
-5. **Abra** um Pull Request
-
 ### 📝 Padrões de Código
-
 - ✅ Use **PascalCase** para classes e métodos
 - ✅ Use **camelCase** para variáveis locais
 - ✅ Adicione **XML comments** em métodos públicos
@@ -1067,26 +931,15 @@ Get-Content "src/StockService/logs/stock-service-*.log" -Wait
 - ✅ Siga as **convenções .NET**
 
 ---
-
-## 📄 Licença
-
-Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
----
-
-## 👥 Autores
-
-- **Developer** - *Desenvolvimento inicial* - [GitHub](https://github.com/username)
-
----
-
-## 🙏 Agradecimentos
-
-- **Microsoft** - .NET 8 e Entity Framework Core
-- **Pivotal Software** - RabbitMQ
-- **Oracle** - MySQL
-- **Community** - Bibliotecas open source utilizadas
-
----
-
-**🎯 Sistema completo e funcional pronto para produção! 🚀**
+### 👨🏻‍💻 Autor:
+<table style="border=0">
+  <tr>
+    <td align="left">
+      <a href="https://github.com/ItaloRochaj">
+        <span><b>Italo Rocha</b></span>
+      </a>
+      <br>
+      <span>Full-Stack Development</span>
+    </td>
+  </tr>
+</table>
