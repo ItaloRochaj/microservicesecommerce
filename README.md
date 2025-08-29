@@ -20,7 +20,7 @@ Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foc
 [🧪 Testes](#-testes)  
 [📁 Estrutura do Projeto](#-estrutura-do-projeto)  
 [📚 Documentação Adicional](#-documentação-adicional)  
-
+]
 ---
 ## 🏗️ Arquitetura
 
@@ -789,15 +789,10 @@ microservicesecommerce/
 
 ### 📖 Arquivos de Documentação
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `API_DOCUMENTATION.md` | Documentação completa das APIs |
-| `API_EXAMPLES.md` | Exemplos de uso das APIs |
-| `ENDPOINTS_GUIDE.md` | Guia detalhado dos endpoints |
-| `POSTMAN_GUIDE.md` | Como usar as collections Postman |
-| `POSTMAN_QUICK_START.md` | Início rápido com Postman |
-| `RABBITMQ_TEST_RESULTS.md` | Resultados dos testes RabbitMQ |
-| `SETUP.md` | Guia de instalação e configuração |
+| Arquivo | Descrição | Link |  
+|---------|-----------|  ----------- |
+| `Health-Dashboard.md` | Documentação completa do Health Dashboard | https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Health-Dashboard.md|  
+| `Troubleshooting.md` | Documentação para Erros | https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Troubleshooting.md |
 
 ---
 ### 🌍 Environments
