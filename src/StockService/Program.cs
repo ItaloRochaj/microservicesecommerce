@@ -81,7 +81,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-// Aplicar migrações automaticamente
+// Aplica migrações automaticamente
 // Comentado para usar banco correto
 /*
 using (var scope = app.Services.CreateScope())

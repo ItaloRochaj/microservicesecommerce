@@ -9,7 +9,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar Serilog
+// Configura Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/sales-service.log", rollingInterval: RollingInterval.Day)
@@ -81,7 +81,7 @@ if (!string.IsNullOrEmpty(jwtKey))
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configura the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

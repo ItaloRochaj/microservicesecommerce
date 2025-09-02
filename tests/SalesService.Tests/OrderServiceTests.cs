@@ -110,7 +110,7 @@ public class OrderServiceTests : IDisposable
         Assert.Single(result.Items);
         Assert.Equal(2, result.Items.First().Quantity);
 
-        // Verificar se eventos foram publicados
+        // Verifica se eventos foram publicados
         _mockRabbitMQService.Verify(
             x => x.PublishMessage(
                 "stock-update", 
@@ -239,14 +239,14 @@ public class TestOrderService : OrderService
 
             foreach (var item in request.Items)
             {
-                // Verificar disponibilidade do produto
+                // Verifica disponibilidade do produto
                 var stockAvailable = await _stockServiceClient.CheckStockAvailabilityAsync(item.ProductId, item.Quantity);
                 if (!stockAvailable)
                 {
                     throw new InvalidOperationException($"Produto {item.ProductId} não tem estoque suficiente");
                 }
 
-                // Buscar informações do produto
+                // Busca informações do produto
                 var product = await _stockServiceClient.GetProductAsync(item.ProductId);
                 if (product == null)
                 {

@@ -96,7 +96,7 @@ public class HealthCheckService : IHealthCheckService
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         try
         {
-            // Criar um HttpClient específico para evitar conflitos
+            // Cria um HttpClient específico para evitar conflitos
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromSeconds(5);
             

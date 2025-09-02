@@ -68,14 +68,14 @@ public class OrderService : IOrderService
 
             foreach (var item in request.Items)
             {
-                // CORREÇÃO TEMPORÁRIA: Verificar se o produto existe no StockService
+                // Verifica se o produto existe no StockService
                 var product = await _stockServiceClient.GetProductAsync(item.ProductId);
                 if (product == null)
                 {
                     throw new InvalidOperationException($"Produto {item.ProductId} não encontrado");
                 }
 
-                // CORREÇÃO TEMPORÁRIA: Verificar estoque diretamente nos dados do produto
+                // estoque diretamente nos dados do produto
                 if (product.StockQuantity < item.Quantity)
                 {
                     throw new InvalidOperationException($"Produto {item.ProductId} não tem estoque suficiente. Disponível: {product.StockQuantity}, Solicitado: {item.Quantity}");
@@ -101,7 +101,7 @@ public class OrderService : IOrderService
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            // Publicar evento para atualizar estoque
+            // Publica evento para atualizar estoque
             var stockUpdateEvents = order.Items.Select(item => new StockUpdateEvent
             {
                 ProductId = item.ProductId,
@@ -115,7 +115,7 @@ public class OrderService : IOrderService
                 _rabbitMQService.PublishMessage("stock-update", stockEvent);
             }
 
-            // Publicar evento de pedido criado
+            // Publica evento de pedido criado
             var orderCreatedEvent = new OrderCreatedEvent
             {
                 OrderId = order.Id,
