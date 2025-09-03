@@ -1,570 +1,963 @@
-# WeatherTrackerAPI 🚀
+# 🛍️ Microserviços E-commerce
 
-Uma API RESTful desenvolvida em .NET 8 que integra com a NASA API para coletar, processar e armazenar dados astronômicos, fornecendo endpoints seguros para consulta de informações espaciais históricas e em tempo real.
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=.net)](https://dotnet.microsoft.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.13-FF6600?style=flat&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
+Projeto final desenvolvido no Bootcamp Avanade - Back-end com .NET e IA, com foco em práticas modernas de desenvolvimento de software. Trata-se de um sistema completo de e-commerce construído com arquitetura de microserviços em .NET 8, utilizando RabbitMQ para comunicação assíncrona entre serviços, JWT para autenticação e MySQL para persistência de dados.
+
+---
 ## 📋 Índice
 
-- [Visão Geral](#visão-geral)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Arquitetura do Projeto](#arquitetura-do-projeto)
-- [Funcionalidades](#funcionalidades)
-- [Pré-requisitos](#pré-requisitos)
-- [Configuração e Instalação](#configuração-e-instalação)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [API Endpoints](#api-endpoints)
-- [Autenticação e Autorização](#autenticação-e-autorização)
-- [Banco de Dados](#banco-de-dados)
-- [Configurações](#configurações)
-- [Testes](#testes)
-- [Documentação da API](#documentação-da-api)
+[🏗️ Arquitetura](#️-arquitetura)  
+[🧩 Componentes](#-componentes)  
+[🔧 Tecnologias](#-tecnologias)  
+[🚀 Como Executar](#-como-executar)  
+[🗄️ Banco de Dados](#️-banco-de-dados)  
+[🔌 API Endpoints](#-api-endpoints)  
+[🐰 RabbitMQ](#-rabbitmq)  
+[🧪 Testes](#-testes)  
+[📁 Estrutura do Projeto](#-estrutura-do-projeto)  
+[📚 Documentação Adicional](#-documentação-adicional)  
 
-## 🎯 Visão Geral
+---
+## 🏗️ Arquitetura
 
-O WeatherTrackerAPI é uma aplicação backend desenvolvida como parte de uma avaliação técnica para demonstrar conhecimentos em:
-
-- **Integração com APIs externas** (NASA API - Astronomy Picture of the Day)
-- **Arquitetura em camadas** com .NET 8
-- **Autenticação JWT**
-- **Persistência de dados** com Entity Framework Core e SQL Server
-- **Documentação** com Swagger/OpenAPI
-- **Boas práticas** de desenvolvimento
-- **Testes unitários e integração** com xUnit
-
-### Objetivo Principal
-
-Criar uma API que consuma dados da NASA API (Astronomy Picture of the Day - APOD), processe essas informações, as armazene em um banco de dados SQL Server e forneça endpoints seguros para consulta de dados históricos e tendências astronômicas.
-
-## 🛠️ Tecnologias Utilizadas
-
-### Backend
-
-- **.NET 8** - Framework principal
-- **ASP.NET Core Web API** - Para criação da API REST
-- **Entity Framework Core** - ORM para acesso ao banco de dados
-- **SQL Server** - Banco de dados principal
-- **AutoMapper** - Mapeamento entre objetos
-- **JWT Bearer** - Autenticação e autorização
-
-### Ferramentas e Bibliotecas
-
-- **Swagger/OpenAPI** - Documentação da API
-- **Serilog** - Logging estruturado
-- **FluentValidation** - Validação de dados
-- **BCrypt.Net** - Hash de senhas
-- **Health Checks** - Monitoramento da aplicação
-- **xUnit** - Framework de testes
-- **Microsoft.AspNetCore.Mvc.Testing** - Testes de integração
-
-## 🏗️ Arquitetura do Projeto
-
-### Estrutura de Camadas
-
+### Diagrama da Arquitetura
 ```mermaid
 graph TB
-    subgraph "Presentation Layer"
-        C1[AuthController]
-        C2[NasaController]
-        C3[TestController]
+    Client[👤 Cliente]
+    Gateway[🌐 API Gateway<br/>Porta 5000<br/>JWT Auth]
+    Stock[📦 Stock Service<br/>Porta 5001<br/>Gestão de Produtos]
+    Sales[🛒 Sales Service<br/>Porta 5002<br/>Gestão de Pedidos]
+    
+    subgraph "💾 Bancos de Dados"
+        AuthDB[(🔐 study_projects<br/>Usuários)]
+        StockDB[(📦 stock_db<br/>Produtos)]
+        SalesDB[(🛒 sales_db<br/>Pedidos)]
     end
     
-    subgraph "Business Logic Layer"
-        S1[AuthService]
-        S2[NasaService]
-        S3[JwtAuthenticationMiddleware]
+    subgraph "📬 Mensageria"
+        RabbitMQ[🐰 RabbitMQ<br/>Porta 5672/15672]
+        OrderQueue[📋 order-created]
+        StockQueue[📦 stock-update]
     end
     
-    subgraph "Data Access Layer"
-        R1[UserRepository]
-        R2[ApodRepository]
-        DB[(SQL Server Database)]
-    end
+    Client --> Gateway
+    Gateway --> Stock
+    Gateway --> Sales
     
-    subgraph "External Services"
-        NASA[NASA API]
-        JWT[JWT Provider]
-    end
+    Gateway --> AuthDB
+    Stock --> StockDB
+    Sales --> SalesDB
     
-    subgraph "Cross-Cutting Concerns"
-        AM[AutoMapper]
-        FV[FluentValidation]
-        SL[Serilog]
-        HC[Health Checks]
-    end
+    Sales --> RabbitMQ
+    Stock --> RabbitMQ
+    RabbitMQ --> OrderQueue
+    RabbitMQ --> StockQueue
     
-    C1 --> S1
-    C2 --> S2
-    C3 --> S1
-    
-    S1 --> R1
-    S2 --> R2
-    S2 --> NASA
-    S1 --> JWT
-    
-    R1 --> DB
-    R2 --> DB
-    
-    C1 -.-> AM
-    C2 -.-> AM
-    S1 -.-> FV
-    S2 -.-> SL
-    
-    style C1 fill:#e1f5fe
-    style C2 fill:#e1f5fe
-    style C3 fill:#e1f5fe
-    style S1 fill:#f3e5f5
-    style S2 fill:#f3e5f5
-    style S3 fill:#f3e5f5
-    style R1 fill:#e8f5e8
-    style R2 fill:#e8f5e8
-    style DB fill:#fff3e0
-    style NASA fill:#ffebee
-    style JWT fill:#ffebee
+    style Gateway fill:#e1f5fe
+    style Stock fill:#f3e5f5
+    style Sales fill:#e8f5e8
+    style RabbitMQ fill:#fff3e0
 ```
 
-### Fluxo de Dados
+---
+### Fluxo de Comunicação  
+**📱 Cliente** → Autentica via **API Gateway**  
+**🌐 Gateway** → Roteia requisições para microserviços  
+**🛒 Sales Service** → Cria pedido e publica mensagem no RabbitMQ  
+**📦 Stock Service** → Consome mensagem e atualiza estoque  
+**🔄 Comunicação assíncrona** via filas RabbitMQ  
+**🎪 Health Dashboard** → Monitora todos os serviços em tempo real  
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Controller
-    participant Service
-    participant Repository
-    participant Database
-    participant NASA_API
-    
-    Client->>Controller: HTTP Request
-    Controller->>Service: Business Logic Call
-    
-    alt NASA Data Request
-        Service->>NASA_API: Fetch APOD Data
-        NASA_API-->>Service: JSON Response
-        Service->>Repository: Store Data
-        Repository->>Database: SQL Insert/Update
-        Database-->>Repository: Success
-        Repository-->>Service: Entity
-    else User Authentication
-        Service->>Repository: Validate User
-        Repository->>Database: SQL Query
-        Database-->>Repository: User Data
-        Repository-->>Service: User Entity
-        Service->>Service: Generate JWT
-    end
-    
-    Service-->>Controller: Result
-    Controller-->>Client: HTTP Response
-```
+### 🎯 Monitoramento Inteligente
+O sistema inclui **Health Checks Inteligentes** que monitoram:    
+✅ **Status dos Microserviços** (StockService, SalesService)  
+✅ **Infraestrutura** (RabbitMQ, MySQL, Sistema)  
+✅ **Métricas** (Memória, Disco, Response Time)  
+✅ **Dashboard Visual** com atualização automática  
+✅ **API JSON** para integração externa
 
-### Diagrama de Componentes
+---
+## 🧩 Componentes
 
-```mermaid
-graph LR
-    subgraph "WeatherTrackerAPI"
-        subgraph "Controllers"
-            AC[AuthController]
-            NC[NasaController]
-            TC[TestController]
-        end
-        
-        subgraph "Services"
-            AS[AuthService]
-            NS[NasaService]
-        end
-        
-        subgraph "Repositories"
-            UR[UserRepository]
-            AR[ApodRepository]
-        end
-        
-        subgraph "Models"
-            U[User]
-            AE[ApodEntity]
-            AR2[ApodResponse]
-        end
-        
-        subgraph "DTOs"
-            LD[LoginDto]
-            RD[RegisterDto]
-            AD[ApodDto]
-            VT[ValidateTokenDto]
-        end
-        
-        subgraph "Data"
-            DC[AppDbContext]
-        end
-        
-        subgraph "Configurations"
-            JWT[JwtSettings]
-            NASA[NasaApiSettings]
-        end
-        
-        subgraph "Middleware"
-            JAM[JwtAuthenticationMiddleware]
-        end
-        
-        subgraph "Extensions"
-            SE[SwaggerExtensions]
-        end
-        
-        subgraph "Mappings"
-            AMP[AutoMapperProfile]
-        end
-    end
-    
-    subgraph "External"
-        NASAAPI[NASA API]
-        SQLDB[(SQL Server)]
-    end
-    
-    AC --> AS
-    NC --> NS
-    TC --> AS
-    
-    AS --> UR
-    NS --> AR
-    
-    UR --> DC
-    AR --> DC
-    DC --> SQLDB
-    
-    NS --> NASAAPI
-    
-    AC -.-> LD
-    AC -.-> RD
-    AC -.-> VT
-    NC -.-> AD
-    
-    AS -.-> JWT
-    NS -.-> NASA
-    
-    style AC fill:#e3f2fd
-    style NC fill:#e3f2fd
-    style TC fill:#e3f2fd
-    style AS fill:#f3e5f5
-    style NS fill:#f3e5f5
-    style UR fill:#e8f5e8
-    style AR fill:#e8f5e8
-    style SQLDB fill:#fff3e0
-    style NASAAPI fill:#ffebee
-```
+### 🌐 API Gateway
+- **Responsabilidade**: Ponto de entrada único, autenticação, roteamento
+- **Porta**: 5000
+- **Funcionalidades**:  
+✅ Autenticação JWT  
+✅ Roteamento via YARP  
+✅ CORS habilitado  
+✅ Swagger UI  
+✅ **Health Checks Dashboard** 🎪  
+✅ **Monitoramento em Tempo Real**  
+✅ **API de Health Consolidada**  
 
-### Principais Funcionalidades
+### 📦 Stock Service
+- **Responsabilidade**: Gerenciamento de produtos e estoque
+- **Porta**: 5001
+- **Funcionalidades**:  
+✅ CRUD de produtos  
+✅ Controle de estoque  
+✅ Validação de disponibilidade  
+✅ Consumo de mensagens RabbitMQ  
+✅ Logs estruturados (Serilog)  
 
-#### 1. ✅ Integração com API de Terceiros
+### 🛒 Sales Service
+- **Responsabilidade**: Gerenciamento de vendas e pedidos
+- **Porta**: 5002
+- **Funcionalidades**:  
+✅ CRUD de pedidos  
+✅ Cálculo de totais  
+✅ Publicação de eventos RabbitMQ  
+✅ Validação de dados  
+✅ Logs estruturados (Serilog)  
 
-- **NASA APOD API**: Busca dados astronômicos diários
-- **Processamento**: Transformação e validação dos dados
-- **Cache**: Armazenamento em cache para otimização
+### 📚 Shared Library
+- **Responsabilidade**: Modelos e utilitários compartilhados
+- **Contém**:  
+✅ Models (User, Product, Order)  
+✅ DTOs  
+✅ Enums (OrderStatus)  
+✅ Interfaces compartilhadas
 
-#### 2. ✅ Banco de Dados SQL Server
+---
+## 🔧 Tecnologias
 
-- **Entity Framework Core**: ORM para acesso aos dados
-- **Migrações**: Controle de versão do banco
-- **Consultas otimizadas**: Queries eficientes
+### Backend Framework
+**🔹 .NET 8** - Framework principal  
+**🔹 ASP.NET Core** - Web API  
+**🔹 Entity Framework Core** - ORM  
+**🔹 AutoMapper** - Mapeamento de objetos  
 
-#### 3. ✅ Autenticação e Autorização
+### Banco de Dados
+**🔹 MySQL 8.0** - Banco principal  
+**🔹 Pomelo.EntityFrameworkCore.MySQL** - Provider EF Core  
 
-- **JWT Tokens**: Autenticação stateless
-- **Roles**: Controle de acesso baseado em funções
-- **Middleware personalizado**: Para logging e validação
+### Mensageria
+**🔹 RabbitMQ 3.13** - Message Broker  
+**🔹 RabbitMQ.Client** - Cliente .NET  
 
-## 📋 Pré-requisitos
+### Autenticação & Segurança
+**🔹 JWT Bearer** - Autenticação stateless  
+**🔹 BCrypt** - Hash de senhas  
 
-- **.NET 8 SDK** ou superior
-- **SQL Server** 2019 ou superior (ou SQL Server Express)
-- **Visual Studio Code** ou **Visual Studio** (recomendado)
-- **Git** para controle de versão
+### API Gateway
+**🔹 YARP (Yet Another Reverse Proxy)** - Proxy reverso  
+**🔹 Microsoft.AspNetCore.Authentication.JwtBearer**  
 
-## ⚙️ Configuração e Instalação
+### Documentação & Testes
+**🔹 Swagger/OpenAPI** - Documentação automática  
+**🔹 xUnit** - Framework de testes  
+**🔹 Moq** - Mocking para testes  
 
-### 1. Clone o repositório
+### Logs & Monitoramento
+**🔹 Serilog** - Logging estruturado  
+**🔹 Health Checks** - Monitoramento de saúde  
+**🔹 Health Dashboard** - Interface visual de monitoramento 🎪  
+**🔹 Health API JSON** - Integração programática  
+**🔹 Real-time Monitoring** - Atualização automática  
 
+### Containerização
+**🔹 Docker** - Containerização  
+**🔹 Docker Compose** - Orquestração local  
+
+---
+## 🚀 Como Executar
+
+### 🔧 Pré-requisitos
+Certifique-se de ter instalado:  
+✅ [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)  
+✅ [MySQL 8.0+](https://dev.mysql.com/downloads/mysql/) ou Docker  
+✅ [Docker Desktop](https://www.docker.com/products/docker-desktop) (recomendado)  
+
+### 🐳 Opção 1: Usando Docker (Recomendado)
 ```bash
-git clone https://github.com/ItaloRochaj/WeatherTrackerAPI.git
-cd WeatherTrackerAPI
+# 1. Clone o repositório
+git clone <repository-url>
+cd microservicesecommerce
+
+# 2. Inicie os containers (MySQL + RabbitMQ)
+docker-compose up -d
+
+# 3. Execute o script de inicialização completa
+.\start-system.bat
+# ou no PowerShell:
+.\start-system.ps1
 ```
 
-### 2. Configure o banco de dados SQL Server
-
-Certifique-se de que o SQL Server está executando e configure a connection string no `appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost\\MSSQLSERVER01;Database=weather_trackerapi;User Id=developer;Password=YourPassword;TrustServerCertificate=true;"
-  }
-}
-```
-
-### 3. Configure as dependências da NASA API
-
-Atualize a chave da API no `appsettings.json`:
-
-```json
-{
-  "NasaApiSettings": {
-    "BaseUrl": "https://api.nasa.gov/planetary/apod",
-    "ApiKey": "SUA_CHAVE_NASA_API_AQUI"
-  }
-}
-```
-
-### 4. Restaure os pacotes e execute as migrações
-
+### 🔧 Opção 2: Instalação Manual
 ```bash
-dotnet restore
+# 1. Clone o repositório
+git clone <repository-url>
+cd microservicesecommerce
+
+# 2. Configure MySQL (se não usar Docker)
+.\scripts\setup-mysql.ps1
+
+# 3. Inicie apenas RabbitMQ via Docker
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+# 4. Execute os serviços
+.\scripts\start-services-mysql.ps1
+```
+
+### ▶️ Opção 3: Comandos Rápidos (Health Dashboard)
+
+**Para iniciar rapidamente com Health Dashboard:**
+```powershell
+# 1. Iniciar RabbitMQ
+docker run -d --name rabbitmq-microservices -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+# 2. Iniciar todos os serviços (3 terminais separados)
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\ApiGateway; dotnet run"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\StockService; dotnet run"  
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd D:\GitHub\microservicesecommerce\src\SalesService; dotnet run"
+
+# 3. Acessar o Health Dashboard
+# http://localhost:5000/api/health/dashboard
+```
+
+### 🌟 Verificação da Instalação
+Após a execução, verifique se os serviços estão rodando:
+
+| Serviço | URL | Status |
+|---------|-----|---------|
+| � **Health Dashboard** | http://localhost:5000/api/health/dashboard | ✅ |
+| 📦 **Stock Service** | http://localhost:5001/swagger | ✅ |
+| 🛒 **Sales Service** | http://localhost:5002/swagger | ✅ |
+| 🐰 **RabbitMQ Management** | http://localhost:15672 | ✅ |
+| 📊 **Health API (JSON)** | http://localhost:5000/api/health/consolidated | ✅ |
+
+**🔑 Credenciais:**
+- **RabbitMQ**: `guest` / `guest`
+- **Health Dashboard**: Acesso direto (sem login)
+
+---
+## 🗄️ Banco de Dados
+
+### 📊 Configuração Geral
+**Credenciais MySQL:**  
+🔑 **Usuário**: `developer`  
+🔐 **Senha**: `Luke@2020`  
+🌐 **Host**: `localhost`  
+🔌 **Porta**: `3306`  
+
+### 🗃️ Estrutura dos Bancos
+
+#### 🔐 study_projects (API Gateway)
+```sql
+-- Tabela de usuários para autenticação
+Users
+├── Id (int, PK, Auto Increment)
+├── Username (varchar(50), Unique)
+├── Email (varchar(100), Unique)
+├── PasswordHash (varchar(255))
+├── FullName (varchar(100))
+├── CreatedAt (datetime)
+└── UpdatedAt (datetime)
+```
+
+#### 📦 stock_db (Stock Service)
+```sql
+-- Tabela de produtos
+Products
+├── Id (int, PK, Auto Increment)
+├── Name (varchar(100))
+├── Description (text)
+├── Price (decimal(10,2))
+├── StockQuantity (int)
+├── Category (varchar(50))
+├── CreatedAt (datetime)
+└── UpdatedAt (datetime)
+```
+
+#### 🛒 sales_db (Sales Service)
+```sql
+-- Tabela de pedidos
+Orders
+├── Id (int, PK, Auto Increment)
+├── CustomerId (int)
+├── CustomerName (varchar(100))
+├── CustomerEmail (varchar(200))
+├── TotalAmount (decimal(10,2))
+├── Status (int) -- enum OrderStatus
+├── OrderDate (datetime)
+├── CreatedAt (datetime)
+└── UpdatedAt (datetime)
+
+-- Tabela de itens do pedido
+OrderItems
+├── Id (int, PK, Auto Increment)
+├── OrderId (int, FK → Orders.Id)
+├── ProductId (int)
+├── ProductName (varchar(100))
+├── Quantity (int)
+├── UnitPrice (decimal(10,2))
+└── TotalPrice (decimal(10,2))
+```
+
+### 🔄 Migrations
+As migrações são executadas automaticamente na inicialização dos serviços.
+
+**Para executar manualmente:**
+```bash
+# Stock Service
+cd src/StockService
+dotnet ef database update
+
+# Sales Service
+cd ../SalesService
+dotnet ef database update
+
+# API Gateway
+cd ../ApiGateway
 dotnet ef database update
 ```
 
-### 5. Execute a aplicação
-
+**Para criar nova migration:**
 ```bash
-dotnet run
+# Exemplo para Stock Service
+cd src/StockService
+dotnet ef migrations add NomeDaMigracao
 ```
 
-A aplicação estará disponível em:
+---
+## 🔌 API Endpoints
 
-- **HTTP**: `http://localhost:5170`
-- **HTTPS**: `https://localhost:7230`
-- **Swagger UI**: `https://localhost:7230/swagger` (página inicial)
+### 🔐 Autenticação
 
-## 🗂️ Estrutura do Projeto
-
-```text
-WeatherTrackerAPI/
-├── Controllers/           # Controladores da API
-│   ├── AuthController.cs
-│   ├── NasaController.cs
-│   └── TestController.cs
-├── Services/             # Lógica de negócio
-│   ├── AuthService.cs
-│   └── NasaService.cs
-├── Repositories/         # Acesso a dados
-│   ├── UserRepository.cs
-│   └── ApodRepository.cs
-├── Models/              # Entidades do domínio
-│   ├── User.cs
-│   ├── ApodEntity.cs
-│   └── ApodResponse.cs
-├── DTOs/                # Data Transfer Objects
-│   ├── LoginDto.cs
-│   ├── RegisterDto.cs
-│   ├── ApodDto.cs
-│   └── ValidateTokenDto.cs
-├── Data/                # Contexto do banco
-│   └── AppDbContext.cs
-├── Configurations/      # Configurações
-│   ├── JwtSettings.cs
-│   └── NasaApiSettings.cs
-├── Middleware/          # Middlewares personalizados
-│   └── JwtAuthenticationMiddleware.cs
-├── Mappings/            # AutoMapper profiles
-│   └── AutoMapperProfile.cs
-├── Extensions/          # Extensions methods
-│   └── SwaggerExtensions.cs
-├── Migrations/          # Migrações do EF Core
-└── WeatherTrackerAPI.Tests/  # Projeto de testes
-    ├── UnitTest1.cs
-    └── WeatherTrackerAPI.Tests.csproj
+#### POST `/api/auth/login`
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
 ```
 
-## 🔐 API Endpoints
+**Resposta:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiration": "2025-08-27T12:00:00Z",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "fullName": "Administrador",
+    "email": "admin@test.com"
+  }
+}
+```
 
-### Autenticação (`/api/auth`)
+#### POST `/api/auth/register`
+```json
+{
+  "username": "novouser",
+  "email": "user@example.com",
+  "password": "senha123",
+  "fullName": "Nome Completo"
+}
+```
 
-| Método | Endpoint | Descrição | Autenticação |
-|--------|----------|-----------|--------------|
-| POST | `/register` | Registra novo usuário | ❌ |
-| POST | `/login` | Login do usuário | ❌ |
-| POST | `/validate` | Valida token JWT | ❌ |
+### 📦 Produtos (via Gateway)
 
-### NASA APOD (`/api/nasa`)
+#### GET `/api/products`
+Lista todos os produtos disponíveis.
 
-| Método | Endpoint | Descrição | Autenticação |
-|--------|----------|-----------|--------------|
-| GET | `/apod` | Obtém APOD por data | ✅ |
-| GET | `/apod/random` | Obtém APOD aleatória | ✅ |
-| GET | `/apod/range` | Obtém APODs em intervalo | ✅ |
-| GET | `/apod/stored` | Lista APODs armazenadas | ✅ |
-| GET | `/apod/trends` | Obtém tendências | ✅ |
-| PUT | `/apod/{id}/rating` | Atualiza avaliação | ✅ |
-| POST | `/apod/{id}/favorite` | Favorita/desfavorita | ✅ |
-| POST | `/apod/sync` | Sincroniza da NASA | ✅ (Admin) |
+**Headers:**
+```
+Authorization: Bearer {token}
+```
 
-### Monitoramento
+**Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "name": "iPhone 15",
+    "description": "Smartphone Apple",
+    "price": 4500.00,
+    "stockQuantity": 50,
+    "category": "Eletrônicos"
+  }
+]
+```
 
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/health` | Health check da aplicação |
+#### POST `/api/products`
+Cria um novo produto.
 
-## 🗄️ Banco de Dados
+```json
+{
+  "name": "Samsung Galaxy S24",
+  "description": "Smartphone Samsung",
+  "price": 3999.99,
+  "stockQuantity": 30,
+  "category": "Eletrônicos"
+}
+```
 
-### Estrutura do Banco de Dados
+#### PUT `/api/products/{id}`
+Atualiza um produto existente.
 
-#### Users
+#### DELETE `/api/products/{id}`
+Remove um produto.
 
-- **Id**: GUID (PK)
-- **Email**: VARCHAR(255) UNIQUE
-- **PasswordHash**: VARCHAR(255)
-- **FirstName**: VARCHAR(100)
-- **LastName**: VARCHAR(100)
-- **Role**: VARCHAR(50)
-- **CreatedAt**: DATETIME
-- **UpdatedAt**: DATETIME
-- **IsActive**: BOOLEAN
+### 🛒 Pedidos (via Gateway)
 
-#### ApodData
+#### GET `/api/orders`
+Lista todos os pedidos.
 
-- **Id**: GUID (PK)
-- **Date**: DATETIME UNIQUE
-- **Title**: VARCHAR(500)
-- **Explanation**: TEXT
-- **Url**: VARCHAR(2000)
-- **HdUrl**: VARCHAR(2000)
-- **MediaType**: VARCHAR(50)
-- **Copyright**: VARCHAR(200)
-- **CreatedAt**: DATETIME
-- **UpdatedAt**: DATETIME
-- **ViewCount**: INT
-- **Rating**: DOUBLE
-- **IsFavorited**: BOOLEAN
+**Headers:**
+```
+Authorization: Bearer {token}
+```
 
+#### POST `/api/orders`
+Cria um novo pedido.
+
+```json
+{
+  "customerId": 6,
+  "customerName": "João Silva",
+  "customerEmail": "joao@email.com",
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    },
+    {
+      "productId": 3,
+      "quantity": 1
+    }
+  ]
+}
+```
+
+**Resposta:**
+```json
+{
+  "id": 10,
+  "customerId": 6,
+  "customerName": "João Silva",
+  "customerEmail": "joao@email.com",
+  "totalAmount": 13499.97,
+  "status": 0,
+  "orderDate": "2025-08-26T23:45:00Z",
+  "items": [
+    {
+      "id": 15,
+      "productId": 1,
+      "productName": "iPhone 15",
+      "quantity": 2,
+      "unitPrice": 4500.00,
+      "totalPrice": 9000.00
+    }
+  ]
+}
+```
+
+#### GET `/api/orders/{id}`
+Consulta um pedido específico.
+
+#### PUT `/api/orders/{id}/status`
+Atualiza o status de um pedido.
+
+```json
+{
+  "status": 1  // 0=Pending, 1=Confirmed, 2=Shipped, 3=Delivered, 4=Cancelled
+}
+```
+
+---
+### 🏥 Health Checks & Dashboard Inteligente
+
+#### 🎪 **Microservices Health Dashboard**
+Sistema avançado de monitoramento em tempo real com interface visual moderna.
+
+**🌟 Acesso ao Dashboard:**
+```
+http://localhost:5000/api/health/dashboard
+```
+
+#### 🔍 **Features do Health Dashboard:**  
+✅ **Status em tempo real** de todos os microserviços  
+✅ **Métricas de sistema** (CPU, memória, disco)  
+✅ **Monitoramento RabbitMQ** com status de filas  
+✅ **Interface responsiva** com design moderno  
+✅ **Atualização automática** a cada 30 segundos  
+✅ **API JSON** para integração  
+✅ **Alertas visuais** por cores (Verde/Amarelo/Vermelho)  
+
+#### 📈 **Componentes Monitorados:**
+| Componente | Descrição | Thresholds |
+|------------|-----------|------------|
+| 🟢 **Memory** | Uso de memória | < 200MB (Healthy), < 500MB (Degraded) |
+| 💾 **DiskSpace** | Espaço em disco | < 80% (Healthy), < 90% (Degraded) |
+| 🐰 **RabbitMQ** | Message broker | Conectividade e filas ativas |
+| 📦 **StockService** | Serviço de produtos | Response time < 1s |
+| 🛒 **SalesService** | Serviço de pedidos | Response time < 1s |
+
+#### 🔧 **Health Check APIs:**
+```bash
+# Dashboard visual (HTML)
+GET http://localhost:5000/api/health/dashboard
+
+# Status consolidado (JSON)
+GET http://localhost:5000/api/health/consolidated
+
+# Health checks individuais
+GET http://localhost:5000/health (Gateway)
+GET http://localhost:5001/health (Stock)
+GET http://localhost:5002/health (Sales)
+```
+
+#### 📊 **Exemplo Response JSON:**
+```json
+{
+  "overallStatus": "Healthy",
+  "timestamp": "2025-08-28T21:47:07Z",
+  "services": {
+    "StockService": {
+      "status": "Healthy",
+      "responseTimeMs": 119,
+      "description": "Service is healthy"
+    },
+    "SalesService": {
+      "status": "Healthy", 
+      "responseTimeMs": 155,
+      "description": "Service is healthy"
+    },
+    "RabbitMQ": {
+      "status": "Healthy",
+      "responseTimeMs": 39,
+      "description": "Message broker is healthy"
+    }
+  },
+  "summary": {
+    "healthy": 4,
+    "degraded": 0,
+    "unhealthy": 1,
+    "healthPercentage": 80
+  }
+}
+```
+
+---
+## 🐰 RabbitMQ
+
+### 📋 Configuração
+**Conexão:**  
+🌐 **Host**: `localhost`  
+🔌 **Porta AMQP**: `5672`  
+🖥️ **Management UI**: `15672`  
+🔑 **Usuário**: `guest`  
+🔐 **Senha**: `guest`  
+
+### 📬 Filas Implementadas
+
+#### 📋 order-created
+- **Publisher**: Sales Service
+- **Consumer**: Stock Service
+- **Finalidade**: Notifica criação de novo pedido
+- **Payload**:
+```json
+{
+  "OrderId": 10,
+  "UserId": "6",
+  "Items": [
+    {
+      "ProductId": 1,
+      "Quantity": 2,
+      "UnitPrice": 4500.00
+    }
+  ],
+  "TotalAmount": 9000.00,
+  "Timestamp": "2025-08-26T23:45:00Z"
+}
+```
+
+#### 📦 stock-update
+- **Publisher**: Stock Service
+- **Consumer**: Sales Service (futuro)
+- **Finalidade**: Notifica atualizações de estoque
+- **Payload**:
+```json
+{
+  "ProductId": 1,
+  "ProductName": "iPhone 15",
+  "OldQuantity": 50,
+  "NewQuantity": 48,
+  "Operation": "DECREASE",
+  "Timestamp": "2025-08-26T23:45:00Z"
+}
+```
+
+---
+### 🔄 Fluxo de Mensagens  
+**🛒 Cliente cria pedido** → Sales Service  
+**📝 Sales Service** → Persiste pedido no banco  
+**📤 Sales Service** → Publica mensagem na fila `order-created`  
+**📥 Stock Service** → Consome mensagem da fila  
+**📦 Stock Service** → Atualiza estoque dos produtos  
+**📤 Stock Service** → Publica mensagem na fila `stock-update` (opcional)  
+
+### 🛠️ Ferramentas de Debug
+
+#### Script PowerShell para Consumo Manual:
+```powershell
+# Execute na raiz do projeto
+.\RabbitMQ-Consumer-Test.ps1
+```
+
+#### Interface Web:
+- **URL**: http://localhost:15672
+- **Login**: guest / guest
+- Navegue para **Queues** → Selecione fila → **Get messages**
+
+---
 ## 🧪 Testes
 
-O projeto inclui um conjunto abrangente de testes para garantir a qualidade e confiabilidade do código.
+### 🗂️ Estrutura de Testes
+```
+tests/
+├── StockService.Tests/    # Testes do serviço de estoque
+│   ├── Controllers/       # Testes dos controllers
+│   ├── Services/          # Testes dos services
+│   └── Integration/       # Testes de integração
+└── SalesService.Tests/    # Testes do serviço de vendas
+    ├── Controllers/       # Testes dos controllers
+    ├── Services/          # Testes dos services
+    └── Integration/       # Testes de integração
+```
 
-### Executar Testes
-
+### 🚀 Executando Testes
 ```bash
 # Executar todos os testes
 dotnet test
 
-# Executar testes com relatório de cobertura
+# Executar testes de um projeto específico
+dotnet test tests/StockService.Tests/
+
+# Executar com relatório de cobertura
 dotnet test --collect:"XPlat Code Coverage"
 
-# Executar testes específicos
-dotnet test --filter "FullyQualifiedName~AuthController"
+# Script automatizado
+.\scripts\run-tests.ps1
 ```
 
-### Estrutura de Testes
+### 📊 Tipos de Testes
 
-```text
-WeatherTrackerAPI.Tests/
-├── UnitTest1.cs                    # Testes básicos de exemplo
-└── WeatherTrackerAPI.Tests.csproj  # Configuração do projeto de testes
+#### 🔬 Testes Unitários  
+✅ Controllers  
+✅ Services  
+✅ Repositories  
+✅ Validators  
+✅ Mappers  
+
+#### 🔗 Testes de Integração
+✅ APIs completas  
+✅ Banco de dados  
+✅ RabbitMQ  
+✅ Autenticação  
+
+#### 🧪 Exemplo de Teste
+```csharp
+[Fact]
+public async Task CreateOrder_ValidRequest_ReturnsCreatedOrder()
+{
+    // Arrange
+    var request = new CreateOrderRequest
+    {
+        CustomerId = 1,
+        CustomerName = "Test User",
+        CustomerEmail = "test@example.com",
+        Items = new List<CreateOrderItemRequest>
+        {
+            new() { ProductId = 1, Quantity = 2 }
+        }
+    };
+
+    // Act
+    var result = await _orderService.CreateOrderAsync(request);
+
+    // Assert
+    Assert.NotNull(result);
+    Assert.Equal(request.CustomerName, result.CustomerName);
+    Assert.Equal(1, result.Items.Count);
+}
 ```
 
-### Tecnologias de Teste
+---
+## 📁 Estrutura do Projeto
+```
+microservicesecommerce/
+├── 📁 src/                             # Código fonte
+│   ├── 🌐 ApiGateway/                  # API Gateway
+│   │   ├── Controllers/                # AuthController
+│   │   ├── Data/                       # DbContext para autenticação
+│   │   ├── Services/                   # AuthService, IAuthService
+│   │   ├── Properties/                 # launchSettings.json
+│   │   ├── appsettings.json            # Configurações (JWT, DB, YARP)
+│   │   └── Program.cs                  # Configuração da aplicação
+│   │
+│   ├── 📦 StockService/                # Serviço de Estoque
+│   │   ├── Controllers/                # ProductsController
+│   │   ├── Data/                       # StockDbContext
+│   │   ├── Services/                   # ProductService, RabbitMQService
+│   │   ├── Consumers/                  # OrderCreatedConsumer
+│   │   ├── Migrations/                 # Migrações EF Core
+│   │   ├── logs/                       # Arquivos de log
+│   │   ├── appsettings.json            # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs                  # Configuração + Background Services
+│   │
+│   ├── 🛒 SalesService/               # Serviço de Vendas
+│   │   ├── Controllers/               # OrdersController
+│   │   ├── Data/                      # SalesDbContext
+│   │   ├── Services/                  # OrderService, RabbitMQPublisher
+│   │   ├── Migrations/                # Migrações EF Core
+│   │   ├── logs/                      # Arquivos de log
+│   │   ├── appsettings.json           # Configurações (DB, RabbitMQ)
+│   │   └── Program.cs                 # Configuração da aplicação
+│   │
+│   └── 📚 Shared/                    # Biblioteca compartilhada
+│       ├── Models/                    # User, Product, Order, OrderItem
+│       ├── DTOs/                      # Data Transfer Objects
+│       └── Enums/                     # OrderStatus
+│
+├── 📁 tests/                         # Projetos de teste
+│   ├── 🧪 StockService.Tests/        # Testes do StockService
+│   │   ├── Controllers/              # Testes dos controllers
+│   │   ├── Services/                 # Testes dos services
+│   │   └── Integration/              # Testes de integração
+│   │
+│   └── 🧪 SalesService.Tests/        # Testes do SalesService
+│       ├── Controllers/              # Testes dos controllers
+│       ├── Services/                 # Testes dos services
+│       └── Integration/              # Testes de integração
+│
+├── 📄 docker-compose.yml             # MySQL + RabbitMQ
+├── 📄 MicroservicesEcommerce.sln     # Solution do Visual Studio
+├── 📄 global.json                    # Versão do .NET SDK
 
-- **xUnit 2.9.2** - Framework de testes principal
-- **Microsoft.AspNetCore.Mvc.Testing** - Testes de integração
-- **Moq 4.20.72** - Biblioteca de mocking
-- **FluentAssertions** - Assertions mais legíveis
-- **Microsoft.EntityFrameworkCore.InMemory** - Banco de dados em memória para testes
-
-### Tipos de Testes Implementados
-
-- **Testes Unitários**: Validação de lógica de negócio isolada
-- **Testes de Integração**: Validação de endpoints da API
-- **Testes de Repositório**: Validação de acesso a dados
-- **Testes de Serviços**: Validação de regras de negócio
-
-## 📚 Documentação da API
-
-A documentação completa da API está disponível através do Swagger UI quando a aplicação está em execução:
-
-- **URL**: `https://localhost:7240`
-- **Swagger JSON**: `https://localhost:7240/swagger/v1/swagger.json`
-
-### Exemplo de Uso
-
-#### 1. Registrar usuário
-```bash
-curl -X POST "https://localhost:7240/api/auth/register" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "usuario@exemplo.com",
-    "password": "MinhaSenh@123",
-    "confirmPassword": "MinhaSenh@123",
-    "firstName": "João",
-    "lastName": "Silva"
-  }'
 ```
 
-#### 2. Fazer login
-```bash
-curl -X POST "https://localhost:7240/api/auth/login" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "usuario@exemplo.com",
-    "password": "MinhaSenh@123"
-  }'
-```
+### 🎯 Arquivos de Configuração Principais
 
-#### 3. Obter APOD (com token)
-```bash
-curl -X GET "https://localhost:7240/api/nasa/apod?date=2024-01-01" \
-  -H "Authorization: Bearer SEU_TOKEN_JWT_AQUI"
-```
-
-## 🔧 Configurações
-
-### JWT Settings
+#### appsettings.json (Exemplo - API Gateway)
 ```json
 {
-  "JwtSettings": {
-    "Secret": "sua-chave-secreta-aqui-minimo-32-caracteres",
-    "Issuer": "WeatherTrackerAPI",
-    "Audience": "WeatherTrackerAPI-Users",
-    "ExpirationInMinutes": 60
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Port=3306;Database=study_projects;Uid=developer;Pwd=Luke@2020;",
+    "RabbitMQ": "amqp://guest:guest@localhost:5672/"
+  },
+  "Jwt": {
+    "Key": "MinhaChaveSecretaSuperSeguraComPeloMenos32Caracteres!",
+    "Issuer": "MicroservicesEcommerce",
+    "Audience": "MicroservicesEcommerce"
+  },
+  "ReverseProxy": {
+    "Routes": {
+      "products": {
+        "ClusterId": "stock",
+        "Match": { "Path": "/api/products/{**remainder}" }
+      },
+      "orders": {
+        "ClusterId": "sales", 
+        "Match": { "Path": "/api/orders/{**remainder}" }
+      }
+    },
+    "Clusters": {
+      "stock": {
+        "Destinations": {
+          "stock1": { "Address": "http://localhost:5001/" }
+        }
+      },
+      "sales": {
+        "Destinations": {
+          "sales1": { "Address": "http://localhost:5002/" }
+        }
+      }
+    }
   }
 }
 ```
 
-### NASA API Settings
-```json
-{
-  "NasaApi": {
-    "BaseUrl": "https://api.nasa.gov/",
-    "ApiKey": "sua-chave-nasa-api",
-    "RateLimitPerHour": 1000,
-    "TimeoutInSeconds": 30
-  }
-}
+---
+## 📚 Documentação Adicional
+
+### 📖 Arquivos de Documentação
+
+## 🏗️ Arquitetura de Implementação do Health Dashboard
+
+### 📐 **Diagrama de Componentes**
+
+```mermaid
+graph TB
+    subgraph "🛰️ Health Dashboard System"
+        Dashboard[🖥️ Visual Dashboard<br/>HTML + CSS + JS]
+        HealthAPI[📊 Health API<br/>JSON Endpoints]
+        HealthService[🔧 Health Service<br/>Core Logic]
+        HealthController[🎮 Health Controller<br/>API Gateway]
+    end
+    
+    subgraph "📊 Monitored Components"
+        StockService[📦 Stock Service<br/>:5001]
+        SalesService[🛒 Sales Service<br/>:5002]
+        RabbitMQ[🐰 RabbitMQ<br/>:5672]
+        MySQL[🗄️ MySQL<br/>:3306]
+        System[💻 System Resources<br/>Memory, Disk, CPU]
+    end
+    
+    Dashboard --> HealthAPI
+    HealthAPI --> HealthController
+    HealthController --> HealthService
+    
+    HealthService --> StockService
+    HealthService --> SalesService
+    HealthService --> RabbitMQ
+    HealthService --> MySQL
+    HealthService --> System
+    
+    style Dashboard fill:#e3f2fd
+    style HealthService fill:#f3e5f5
+    style StockService fill:#e8f5e8
+    style SalesService fill:#fff3e0
 ```
 
-## 📊 Recursos Implementados
 
-### ✅ Requisitos Obrigatórios
-- [x] API Web .NET 8
-- [x] Integração com API externa (NASA APOD)
-- [x] Controlador para buscar dados externos
-- [x] Processamento/transformação de dados
-- [x] Persistência em banco de dados (SQL Server)
-- [x] Autenticação JWT
-- [x] Documentação Swagger
+| Arquivo | Descrição |
+|---------|-----------|
+| [Health-Dashboard.md](https://github.com/ItaloRochaj/microservicesecommerce/blob/main/Documenta%C3%A7%C3%A3o%20Adicional/Health-Dashboard.md) | Documentação completa do Health Dashboard | 
 
-### ✅ Funcionalidades Extras
-
-- [x] Cache em memória
-- [x] Health checks
-- [x] Logging estruturado (Serilog)
-- [x] Validação com FluentValidation
-- [x] AutoMapper para mapeamentos
-- [x] Middleware personalizado
-- [x] Paginação
-- [x] Sistema de avaliações
-- [x] Favoritos
-- [x] Testes unitários com xUnit
+---
+### 🌍 Environments
+- **`Microservices-Ecommerce-COMPLETO.postman_environment.json`**
+- **`Microservices-Ecommerce.postman_environment.json`**
+---
 
 ## 🚀 Deploy e Produção
 
-Para deploy em produção, considere:
+### 🐳 Docker Compose Completo
+Para deploy completo com todos os serviços:
+```yaml
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: Luke@2020
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: Luke@2020
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
 
-1. **Variáveis de ambiente** para configurações sensíveis
-2. **HTTPS** obrigatório
-3. **Rate limiting** para APIs externas
-4. **Monitoramento** com Application Insights
-5. **Docker** para containerização
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # Adicione aqui os serviços .NET quando dockerizados
+```
+
+---
+### 📊 Monitoramento
+
+#### Health Checks Implementados
+✅ Database connectivity  
+✅ RabbitMQ connectivity    
+✅ Service availability  
+
+#### Logs Estruturados
+✅ Serilog com formatação JSON  
+✅ Logs salvos em arquivos por serviço  
+✅ Níveis configuráveis (Info, Warning, Error)  
+
+---
+## 🔧 Configurações Avançadas
+
+### 🔐 Segurança
+
+#### JWT Configuration
+```json
+{
+  "Jwt": {
+    "Key": "MinhaChaveSecretaSuperSeguraComPeloMenos32Caracteres!",
+    "Issuer": "MicroservicesEcommerce",
+    "Audience": "MicroservicesEcommerce",
+    "ExpiryMinutes": 60
+  }
+}
+```
+
+#### CORS Policy
+```csharp
+services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+```
+
+### 🔄 RabbitMQ Configuração Avançada
+
+#### Connection Factory
+```csharp
+var factory = new ConnectionFactory()
+{
+    HostName = "localhost",
+    Port = 5672,
+    UserName = "guest",
+    Password = "guest",
+    VirtualHost = "/",
+    AutomaticRecoveryEnabled = true,
+    RequestedHeartbeat = TimeSpan.FromSeconds(30)
+};
+```
+
+#### Queue Declaration
+```csharp
+channel.QueueDeclare(
+    queue: "order-created",
+    durable: true,
+    exclusive: false,
+    autoDelete: false,
+    arguments: null
+);
+```
+
+### 🔍 Logs de Debug
+
+#### Localização dos Logs
+- **Stock Service**: `src/StockService/logs/`
+- **Sales Service**: `src/SalesService/logs/`
+- **API Gateway**: Console output
+
+#### Verificação de Logs
+```bash
+# Tail dos logs em tempo real
+Get-Content "src/StockService/logs/stock-service-*.log" -Wait
+```
+
+### 📝 Padrões de Código
+✅ Use **PascalCase** para classes e métodos  
+✅ Use **camelCase** para variáveis locais  
+✅ Adicione **XML comments** em métodos públicos  
+✅ Escreva **testes unitários** para nova funcionalidade  
+✅ Siga as **convenções .NET**
 
 ---
 ### 👨🏻‍💻 Autor:
@@ -579,7 +972,3 @@ Para deploy em produção, considere:
     </td>
   </tr>
 </table>
----
-
-**NASA API**: Este projeto utiliza a [NASA Open Data API](https://api.nasa.gov/) para obter dados da Astronomy Picture of the Day (APOD).
-
