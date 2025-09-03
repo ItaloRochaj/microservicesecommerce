@@ -1,4 +1,7 @@
-# 🎪 Microservices Health Dashboard - Documentação Completa
+<img width="20" height="20" alt="microsservico" src="https://github.com/user-attachments/assets/45b9431e-e042-4b18-b22a-228d88df2969" />  
+Microservices Health Dashboard - Documentação Completa
+
+---
 
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=.net)](https://dotnet.microsoft.com/)
 [![Health Checks](https://img.shields.io/badge/Health%20Checks-Inteligentes-00C851?style=flat&logo=check-circle)](/)
@@ -35,7 +38,7 @@ O **Microservices Health Dashboard** é um sistema avançado de monitoramento em
 ✅ **Métricas Abrangentes** - Sistema, infraestrutura e microserviços  
 ✅ **Zero Configuração** - Funciona out-of-the-box após instalação  
 
-### 🎪 **Acesso Rápido**
+### 🛰️ **Acesso Rápido**
 
 ```bash
 # Dashboard Visual
@@ -53,7 +56,7 @@ http://localhost:5000/api/health/consolidated
 
 ```mermaid
 graph TB
-    subgraph "🎪 Health Dashboard System"
+    subgraph "🛰️ Health Dashboard System"
         Dashboard[🖥️ Visual Dashboard<br/>HTML + CSS + JS]
         HealthAPI[📊 Health API<br/>JSON Endpoints]
         HealthService[🔧 Health Service<br/>Core Logic]
@@ -1344,4 +1347,8 @@ O sistema está pronto para uso em produção, com todas as features essenciais 
       <span>Full-Stack Development</span>
     </td>
   </tr>
+
 </table>
+
+
+
